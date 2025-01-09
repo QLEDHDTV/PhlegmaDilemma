@@ -9,12 +9,12 @@ public class ConfigWindow : Window, IDisposable
     // We give this window a constant ID using ###
     // This allows for labels being dynamic, like "{FPS Counter}fps###XYZ counter window",
     // and the window ID will always be "###XYZ counter window" for ImGui
-    public ConfigWindow(Plugin plugin) : base("A Wonderful Configuration Window###With a constant ID")
+    public ConfigWindow(Plugin plugin) : base("Rangefinder Configuration###")
     {
         Flags = ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
                 ImGuiWindowFlags.NoScrollWithMouse;
 
-        Size = new Vector2(232, 90);
+        Size = new Vector2(400, 600);
         SizeCondition = ImGuiCond.Always;
 
         Configuration = plugin.Configuration;
@@ -22,35 +22,86 @@ public class ConfigWindow : Window, IDisposable
 
     public void Dispose() { }
 
-    public override void PreDraw()
-    {
-        // Flags must be added or removed before Draw() is being called, or they won't apply
-        if (Configuration.IsConfigWindowMovable)
-        {
-            Flags &= ~ImGuiWindowFlags.NoMove;
-        }
-        else
-        {
-            Flags |= ImGuiWindowFlags.NoMove;
-        }
-    }
+    public override void PreDraw() { }
 
     public override void Draw()
     {
-        // can't ref a property, so use a local copy
-        var configValue = Configuration.SomePropertyToBeSavedAndWithADefault;
-        if (ImGui.Checkbox("Random Config Bool", ref configValue))
+        var rangefinderEnabler = Configuration.EnableRangefinder;
+        if (ImGui.Checkbox("Enable rangefinder", ref rangefinderEnabler))
         {
-            Configuration.SomePropertyToBeSavedAndWithADefault = configValue;
-            // can save immediately on change, if you don't want to provide a "Save and Close" button
+            Configuration.EnableRangefinder = rangefinderEnabler;
             Configuration.Save();
         }
 
-        var movable = Configuration.IsConfigWindowMovable;
-        if (ImGui.Checkbox("Movable Config Window", ref movable))
+        var autoAttackRangeEnabler = Configuration.EnableAutoAttackRange;
+        if (ImGui.Checkbox("Enable auto-attack range circle", ref autoAttackRangeEnabler))
         {
-            Configuration.IsConfigWindowMovable = movable;
+            Configuration.EnableAutoAttackRange = autoAttackRangeEnabler;
             Configuration.Save();
+        }
+
+        ImGui.Separator();
+
+        var thickness = Configuration.Thickness;
+        if (ImGui.InputFloat("Line thickness", ref thickness))
+        {
+            if (thickness <= 15)
+            {
+                Configuration.Thickness = thickness;
+            }
+            Configuration.Save();
+        }
+
+        var resolution = Configuration.PointsNumber;
+        if (ImGui.InputInt("Resolution", ref resolution))
+        {
+            if (resolution <= 250) 
+            {
+                Configuration.PointsNumber = resolution;
+            }
+            Configuration.Save();
+        }
+
+        ImGui.Separator();
+
+        var actionRangeColor = Configuration.ColorActionRange;
+        if (ImGui.CollapsingHeader("Action range color"))
+        {
+            if (ImGui.ColorPicker4("##range", ref actionRangeColor))
+            {
+                Configuration.ColorActionRange = actionRangeColor;
+                Configuration.Save();
+            }
+        }
+
+        var actionRadiusColor = Configuration.ColorActionRadius;
+        if (ImGui.CollapsingHeader("Action radius color"))
+        {
+            if (ImGui.ColorPicker4("##radius", ref actionRadiusColor))
+            {
+                Configuration.ColorActionRadius = actionRadiusColor;
+                Configuration.Save();
+            }
+        }
+
+        var autoAttackRangeColor = Configuration.ColorAutoAttack;
+        if (ImGui.CollapsingHeader("Auto-attack range color"))
+        {
+            if (ImGui.ColorPicker4("##autoattack", ref autoAttackRangeColor))
+            {
+                Configuration.ColorAutoAttack = autoAttackRangeColor;
+                Configuration.Save();
+            }
+        }
+
+        var targetPointerColor = Configuration.ColorTargetPointer;
+        if (ImGui.CollapsingHeader("Target pointer color"))
+        {
+            if (ImGui.ColorPicker4("##target", ref targetPointerColor))
+            {
+                Configuration.ColorTargetPointer = targetPointerColor;
+                Configuration.Save();
+            }
         }
     }
 }

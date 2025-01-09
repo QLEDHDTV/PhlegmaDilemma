@@ -1,12 +1,11 @@
 {
   "Author": "BOT_",
   "Name": "Phlegma Dilemma",
-  "Punchline": "A short one-liner that shows up in /xlplugins.",
-  "Description": "A description that shows up in /xlplugins. List any major slash-command(s).",
+  "Punchline": "A simple rangefinder for actions.",
+  "Description": "Why does phlegma have a 6 yalm range???",
   "ApplicableVersion": "any",
   "Tags": [
-    "sample",
-    "plugin",
-    "goats"
+    "rangefinder",
+    "plugin"
   ]
 }

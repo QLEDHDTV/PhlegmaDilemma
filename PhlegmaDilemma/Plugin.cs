@@ -34,7 +34,7 @@ public unsafe sealed class Plugin : IDalamudPlugin
 
         ConfigWindow = new ConfigWindow(this);
         MainWindow = new MainWindow(this);
-        Rangefinder = new Rangefinder(this);
+        Rangefinder = new Rangefinder(this, Configuration);
 
         WindowSystem.AddWindow(ConfigWindow);
         WindowSystem.AddWindow(MainWindow);

@@ -24,8 +24,6 @@ public class MainWindow : Window, IDisposable
     public override void Draw()
     {
         DataDynamic data = Plugin.RetrieveData();
-        ImGui.TextUnformatted($"The random config bool is {Plugin.Configuration.SomePropertyToBeSavedAndWithADefault}");
-        ImGui.Spacing();
         ImGui.TextUnformatted(
             $"Player Pos: {data.PlayerPosition:F3}\n" +
             $"Target: {data.Target}\n" +
