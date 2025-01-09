@@ -59,8 +59,8 @@ internal class Rangefinder : Window , IDisposable
                     if (data.Target != null)
                     {
                         ImGui.GetForegroundDrawList().AddPolycircle3D(
-                        data.TargetPosition, data.ActionRadius, Plugin.Configuration.PointsNumber,
-                        Plugin.Configuration.ColorActionRadius, Plugin.Configuration.Thickness);
+                        new Vector3 (data.TargetPosition.X, data.PlayerPosition.Y, data.TargetPosition.Z), data.ActionRadius, 
+                        Plugin.Configuration.PointsNumber, Plugin.Configuration.ColorActionRadius, Plugin.Configuration.Thickness);
                     }
                 }
                 else
