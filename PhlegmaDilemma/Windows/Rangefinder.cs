@@ -158,19 +158,19 @@ internal class Rangefinder : Window , IDisposable
                         120,
                         Plugin.Configuration.ColorActionRadius, 
                         Plugin.Configuration.Thickness);
-                        // Some action have a cone angle of less then 120. Investigate where is the real angle stored.
                     }
-                    else if (data.CanTargetEnemy == false)
+                    else if (data.CanTargetEnemy == false) // Some cone actions don't need to have a target to use it.
                     {                                                                                           
                         ImGui.GetForegroundDrawList().AddCone3D(
                         data.PlayerPosition, 
                         playerFrontPoint, 
                         data.ActionRadius + 0.5f, 
                         Plugin.Configuration.PointsNumber / 3, 
-                        120,
+                        90,
                         Plugin.Configuration.ColorActionRadius, 
                         Plugin.Configuration.Thickness);
                     }
+                    // It seems like actions that need the target have a 120 degree cone, while the ones that don't have 90 degrees.
                     break;
 
                 case 4: // Line AoE (square)
