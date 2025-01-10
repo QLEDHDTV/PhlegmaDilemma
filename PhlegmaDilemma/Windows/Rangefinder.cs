@@ -34,7 +34,7 @@ internal class Rangefinder : Window , IDisposable
             // Target pointer
             if (data.Target != null)
             {
-                if (data.ActionRange >= data.DistanceToTarget2D)
+                if (data.ActionRange >= data.DistanceToTarget2D || (data.ActionRange == 0 && data.ActionRadius >= data.DistanceToTarget2D))
                 {
                     ImGui.GetForegroundDrawList().AddLine3D(
                     actionRangeEdgePoint,
@@ -69,7 +69,7 @@ internal class Rangefinder : Window , IDisposable
             // Focus target pointer
             if (data.FocusTarget != null)
             {
-                if (data.ActionRange >= data.DistanceToFocusTarget2D)
+                if (data.ActionRange >= data.DistanceToFocusTarget2D || (data.ActionRange == 0 && data.ActionRadius >= data.DistanceToFocusTarget2D))
                 {
                     ImGui.GetForegroundDrawList().AddLine3D(
                     focusActionRangeEdgePoint,
