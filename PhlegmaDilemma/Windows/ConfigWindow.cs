@@ -94,12 +94,22 @@ public class ConfigWindow : Window, IDisposable
             }
         }
 
-        var targetPointerColor = Configuration.ColorTargetPointerOutOfRange;
-        if (ImGui.CollapsingHeader("Target pointer color"))
+        var targetOutofRangePointerColor = Configuration.ColorTargetPointerOutOfRange;
+        if (ImGui.CollapsingHeader("Target out-of-range pointer color"))
         {
-            if (ImGui.ColorPicker4("##target", ref targetPointerColor))
+            if (ImGui.ColorPicker4("##targetofr", ref targetOutofRangePointerColor))
             {
-                Configuration.ColorTargetPointerOutOfRange = targetPointerColor;
+                Configuration.ColorTargetPointerOutOfRange = targetOutofRangePointerColor;
+                Configuration.Save();
+            }
+        }
+
+        var targetInRangePointerColor = Configuration.ColorTargetPointerInRange;
+        if (ImGui.CollapsingHeader("Target in-range pointer color"))
+        {
+            if (ImGui.ColorPicker4("##targetofr", ref targetInRangePointerColor))
+            {
+                Configuration.ColorTargetPointerInRange = targetInRangePointerColor;
                 Configuration.Save();
             }
         }
