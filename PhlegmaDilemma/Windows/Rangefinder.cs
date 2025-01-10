@@ -29,32 +29,95 @@ internal class Rangefinder : Window , IDisposable
             Vector3 focusActionRangeEdgePoint = new Vector3(data.PlayerPosition.X + data.ActionRange * (float)Math.Cos(focusTargetAngle), data.PlayerPosition.Y, data.PlayerPosition.Z + data.ActionRange * (float)Math.Sin(focusTargetAngle));
             Vector3 focusHitboxEdgePoint = new Vector3(data.FocusTargetPosition.X - data.FocusTargetHitbox * (float)Math.Cos(focusTargetAngle), data.PlayerPosition.Y, data.FocusTargetPosition.Z - data.FocusTargetHitbox * (float)Math.Sin(focusTargetAngle));
 
+            Vector3 playerFrontPoint = new Vector3(data.PlayerPosition.X + 1 * MathF.Sin(data.PlayerRotation), data.PlayerPosition.Y, data.PlayerPosition.Z + 1 * MathF.Cos(data.PlayerRotation));
 
             // Target pointer
             if (data.Target != null)
             {
-                ImGui.GetForegroundDrawList().AddLine3D(actionRangeEdgePoint, targetHitboxEdgePoint, Plugin.Configuration.ColorTargetPointer, Plugin.Configuration.Thickness);
-                ImGui.GetForegroundDrawList().AddPolycircle3D(new Vector3(data.TargetPosition.X, data.PlayerPosition.Y, data.TargetPosition.Z), data.TargetHitbox, Plugin.Configuration.PointsNumber, Plugin.Configuration.ColorTargetPointer, Plugin.Configuration.Thickness);
+                if (data.ActionRange >= data.DistanceToTarget2D)
+                {
+                    ImGui.GetForegroundDrawList().AddLine3D(
+                    actionRangeEdgePoint,
+                    targetHitboxEdgePoint,
+                    Plugin.Configuration.ColorTargetPointerInRange,
+                    Plugin.Configuration.Thickness);
+
+                    ImGui.GetForegroundDrawList().AddPolycircle3D(
+                    new Vector3(data.TargetPosition.X, data.PlayerPosition.Y, data.TargetPosition.Z),
+                    data.TargetHitbox,
+                    Plugin.Configuration.PointsNumber,
+                    Plugin.Configuration.ColorTargetPointerInRange,
+                    Plugin.Configuration.Thickness);
+                }
+                else
+                {
+                    ImGui.GetForegroundDrawList().AddLine3D(
+                    actionRangeEdgePoint,
+                    targetHitboxEdgePoint,
+                    Plugin.Configuration.ColorTargetPointerOutOfRange,
+                    Plugin.Configuration.Thickness);
+
+                    ImGui.GetForegroundDrawList().AddPolycircle3D(
+                    new Vector3(data.TargetPosition.X, data.PlayerPosition.Y, data.TargetPosition.Z),
+                    data.TargetHitbox,
+                    Plugin.Configuration.PointsNumber,
+                    Plugin.Configuration.ColorTargetPointerOutOfRange,
+                    Plugin.Configuration.Thickness);
+                }
             }
 
             // Focus target pointer
             if (data.FocusTarget != null)
             {
-                ImGui.GetForegroundDrawList().AddLine3D(focusActionRangeEdgePoint, focusHitboxEdgePoint, Plugin.Configuration.ColorTargetPointer, Plugin.Configuration.Thickness);
-                ImGui.GetForegroundDrawList().AddPolycircle3D(new Vector3(data.FocusTargetPosition.X, data.PlayerPosition.Y, data.FocusTargetPosition.Z), data.FocusTargetHitbox, Plugin.Configuration.PointsNumber, Plugin.Configuration.ColorTargetPointer, Plugin.Configuration.Thickness);
+                if (data.ActionRange >= data.DistanceToFocusTarget2D)
+                {
+                    ImGui.GetForegroundDrawList().AddLine3D(
+                    focusActionRangeEdgePoint,
+                    focusHitboxEdgePoint,
+                    Plugin.Configuration.ColorTargetPointerInRange,
+                    Plugin.Configuration.Thickness);
+
+                    ImGui.GetForegroundDrawList().AddPolycircle3D(
+                    new Vector3(data.FocusTargetPosition.X, data.PlayerPosition.Y, data.FocusTargetPosition.Z),
+                    data.FocusTargetHitbox,
+                    Plugin.Configuration.PointsNumber,
+                    Plugin.Configuration.ColorTargetPointerInRange,
+                    Plugin.Configuration.Thickness);
+                }
+                else
+                {
+                    ImGui.GetForegroundDrawList().AddLine3D(
+                    focusActionRangeEdgePoint,
+                    focusHitboxEdgePoint,
+                    Plugin.Configuration.ColorTargetPointerOutOfRange,
+                    Plugin.Configuration.Thickness);
+
+                    ImGui.GetForegroundDrawList().AddPolycircle3D(
+                    new Vector3(data.FocusTargetPosition.X, data.PlayerPosition.Y, data.FocusTargetPosition.Z),
+                    data.FocusTargetHitbox,
+                    Plugin.Configuration.PointsNumber,
+                    Plugin.Configuration.ColorTargetPointerOutOfRange,
+                    Plugin.Configuration.Thickness);
+                }
             }
 
             // Action range
             ImGui.GetForegroundDrawList().AddPolycircle3D(
-            data.PlayerPosition, data.ActionRange, Plugin.Configuration.PointsNumber,
-            Plugin.Configuration.ColorActionRange, Plugin.Configuration.Thickness);
+            data.PlayerPosition, 
+            data.ActionRange, 
+            Plugin.Configuration.PointsNumber,
+            Plugin.Configuration.ColorActionRange, 
+            Plugin.Configuration.Thickness);
 
             // Auto-attack range (~3.6 yalms)
             if (Configuration.EnableAutoAttackRange == true)
             {
                 ImGui.GetForegroundDrawList().AddPolycircle3D(
-                data.PlayerPosition, 3.6f, Plugin.Configuration.PointsNumber,
-                Plugin.Configuration.ColorAutoAttack, Plugin.Configuration.Thickness);
+                data.PlayerPosition, 
+                3.6f, 
+                Plugin.Configuration.PointsNumber,
+                Plugin.Configuration.ColorAutoAttack, 
+                Plugin.Configuration.Thickness);
             }
 
             // AoE shape
@@ -66,25 +129,47 @@ internal class Rangefinder : Window , IDisposable
                         if (data.Target != null)
                         {
                             ImGui.GetForegroundDrawList().AddPolycircle3D(
-                            new Vector3(data.TargetPosition.X, data.PlayerPosition.Y, data.TargetPosition.Z), data.ActionRadius,
-                            Plugin.Configuration.PointsNumber, Plugin.Configuration.ColorActionRadius, Plugin.Configuration.Thickness);
+                            new Vector3(data.TargetPosition.X, data.PlayerPosition.Y, data.TargetPosition.Z), 
+                            data.ActionRadius,
+                            Plugin.Configuration.PointsNumber, 
+                            Plugin.Configuration.ColorActionRadius, 
+                            Plugin.Configuration.Thickness);
                         }
                     }
                     else
                     {
                         ImGui.GetForegroundDrawList().AddPolycircle3D(
-                        data.PlayerPosition, data.ActionRadius, Plugin.Configuration.PointsNumber,
-                        Plugin.Configuration.ColorActionRadius, Plugin.Configuration.Thickness);
+                        data.PlayerPosition, 
+                        data.ActionRadius, 
+                        Plugin.Configuration.PointsNumber,
+                        Plugin.Configuration.ColorActionRadius, 
+                        Plugin.Configuration.Thickness);
                     }
                     break;
 
                 case 3: // Cone AoE
-                    if (data.Target != null)
+                    if (data.Target != null && data.CanTargetEnemy == true)
                     {
                         ImGui.GetForegroundDrawList().AddCone3D(
-                        data.PlayerPosition, data.TargetPosition, data.ActionRadius + 0.5f,                     // From what i seen, the cones attack have a 120 degrees
-                        Plugin.Configuration.PointsNumber / 3, 120,                                             // cones. Maybe there are exceptions? Need to look more into it.
-                        Plugin.Configuration.ColorActionRadius, Plugin.Configuration.Thickness);
+                        data.PlayerPosition, 
+                        data.TargetPosition, 
+                        data.ActionRadius + 0.5f,
+                        Plugin.Configuration.PointsNumber / 3, 
+                        120,
+                        Plugin.Configuration.ColorActionRadius, 
+                        Plugin.Configuration.Thickness);
+                        // Some action have a cone angle of less then 120. Investigate where is the real angle stored.
+                    }
+                    else if (data.CanTargetEnemy == false)
+                    {                                                                                           
+                        ImGui.GetForegroundDrawList().AddCone3D(
+                        data.PlayerPosition, 
+                        playerFrontPoint, 
+                        data.ActionRadius + 0.5f, 
+                        Plugin.Configuration.PointsNumber / 3, 
+                        120,
+                        Plugin.Configuration.ColorActionRadius, 
+                        Plugin.Configuration.Thickness);
                     }
                     break;
 
@@ -92,8 +177,12 @@ internal class Rangefinder : Window , IDisposable
                     if (data.Target != null)
                     {
                         ImGui.GetForegroundDrawList().AddSquare3D(
-                            data.PlayerPosition, data.TargetPosition, actionRadiusEdgePoint, data.CastWidth,
-                            Plugin.Configuration.ColorActionRadius, Plugin.Configuration.Thickness);
+                            data.PlayerPosition, 
+                            data.TargetPosition, 
+                            actionRadiusEdgePoint, 
+                            data.CastWidth,
+                            Plugin.Configuration.ColorActionRadius, 
+                            Plugin.Configuration.Thickness);
                     }
                     break;
 

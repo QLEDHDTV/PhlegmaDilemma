@@ -9,6 +9,7 @@ internal struct DataDynamic
     internal Vector3 FocusTargetPosition { get; set; }
     internal float FocusTargetHitbox { get; set; }
     internal Vector3 PlayerPosition { get; set; }
+    internal float PlayerRotation { get; set; }
     internal uint ActionID { get; set; }
     internal string ActionName { get; set; }
     internal float ActionRadius { get; set; }
@@ -31,6 +32,8 @@ internal struct DataDynamic
     internal float DistanceToTarget3D => TargetPosition != Vector3.Zero ? (PlayerPosition - TargetPosition).Length() - TargetHitbox : 0f;
     // Probably not useful? Game seems to care more about 2D distance to a target then 3D.
     internal float DistanceToTarget2D => TargetPosition != Vector3.Zero ? PlayerPosition.Distance2D(TargetPosition) - TargetHitbox : 0f;
+    internal float DistanceToFocusTarget3D => FocusTargetPosition != Vector3.Zero ? (PlayerPosition - FocusTargetPosition).Length() - FocusTargetHitbox : 0f;
+    internal float DistanceToFocusTarget2D => FocusTargetPosition != Vector3.Zero ? PlayerPosition.Distance2D(FocusTargetPosition) - FocusTargetHitbox : 0f;
     internal float ActionRange => ActionManager.GetActionRange(ActionID) != 0 ? ActionManager.GetActionRange(ActionID) + 0.5f : 0f;
     // Action range have additional 0.5 yalms added because this is the radius of the player hitbox.
     // It seems like the range calculation for actions start at the edge of the player hitbox, and not at the center.

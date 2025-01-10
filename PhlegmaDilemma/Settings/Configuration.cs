@@ -10,7 +10,8 @@ public class Configuration : IPluginConfiguration
     public Vector4 ColorActionRange { get; set; } = new Vector4((float)0xFF / 255f, (float)0x00 / 255f, (float)0x00 / 255f, (float)0xFF / 255f);
     public Vector4 ColorActionRadius { get; set; } = new Vector4((float)0x00 / 255f, (float)0xFF / 255f, (float)0x00 / 255f, (float)0xFF / 255f);
     public Vector4 ColorAutoAttack { get; set; } = new Vector4((float)0x00 / 255f, (float)0x00 / 255f, (float)0xFF / 255f, (float)0xFF / 255f);
-    public Vector4 ColorTargetPointer { get; set; } = new Vector4((float)0xFF / 255f, (float)0x00 / 255f, (float)0x00 / 255f, (float)0xFF / 255f);
+    public Vector4 ColorTargetPointerOutOfRange { get; set; } = new Vector4((float)0xFF / 255f, (float)0x00 / 255f, (float)0x00 / 255f, (float)0xFF / 255f);
+    public Vector4 ColorTargetPointerInRange { get; set; } = new Vector4((float)0xFF / 255f, (float)0xFF / 255f, (float)0x00 / 255f, (float)0xFF / 255f);
     public float Thickness { get; set; } = 2f;
     public int PointsNumber { get; set; } = 100;
 

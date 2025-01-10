@@ -26,6 +26,7 @@ public class MainWindow : Window, IDisposable
         DataDynamic data = Plugin.RetrieveData();
         ImGui.TextUnformatted(
             $"Player Pos: {data.PlayerPosition:F3}\n" +
+            $"Player Rot: {data.PlayerRotation}\n" +
             $"Target: {data.Target}\n" +
             $"Target Pos: {data.TargetPosition:F3}\n" +
             $"Target HB: {data.TargetHitbox:F3}\n" +
