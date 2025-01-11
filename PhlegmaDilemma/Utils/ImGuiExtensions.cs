@@ -59,13 +59,13 @@ internal static class ImGuiExtensions
         float angleCenterToTarget = (float)Math.Atan2(radiusEdge.X - centerPos.X, radiusEdge.Z - centerPos.Z);
         uint colorConverted = ImGuiUtils.Vec4ToUInt(color);
 
-        Plugin.GameGui.WorldToScreen(new Vector3(centerPos.X + (width / 2) * (float)Math.Cos(angleCenterToTarget), centerPos.Y, centerPos.Z - (width / 2) * (float)Math.Sin(angleCenterToTarget)), out Vector2 leftSidePlayer);
+        Plugin.GameGui.WorldToScreen(new Vector3(centerPos.X + (width / 2) * (float)Math.Cos(angleCenterToTarget), centerPos.Y, centerPos.Z - (width / 2) * (float)Math.Sin(angleCenterToTarget)), out Vector2 leftSideCenter);
         Plugin.GameGui.WorldToScreen(new Vector3(radiusEdge.X + (width / 2) * (float)Math.Cos(angleCenterToTarget), centerPos.Y, radiusEdge.Z - (width / 2) * (float)Math.Sin(angleCenterToTarget)), out Vector2 leftSideEdge);
-        Plugin.GameGui.WorldToScreen(new Vector3(centerPos.X - (width / 2) * (float)Math.Cos(angleCenterToTarget), centerPos.Y, centerPos.Z + (width / 2) * (float)Math.Sin(angleCenterToTarget)), out Vector2 rightSidePlayer);
+        Plugin.GameGui.WorldToScreen(new Vector3(centerPos.X - (width / 2) * (float)Math.Cos(angleCenterToTarget), centerPos.Y, centerPos.Z + (width / 2) * (float)Math.Sin(angleCenterToTarget)), out Vector2 rightSideCenter);
         Plugin.GameGui.WorldToScreen(new Vector3(radiusEdge.X - (width / 2) * (float)Math.Cos(angleCenterToTarget), centerPos.Y, radiusEdge.Z + (width / 2) * (float)Math.Sin(angleCenterToTarget)), out Vector2 rightSideEdge);
-        self.AddLine(leftSidePlayer, leftSideEdge, colorConverted, thickness);
-        self.AddLine(rightSidePlayer, rightSideEdge, colorConverted, thickness);
-        self.AddLine(rightSidePlayer, leftSidePlayer, colorConverted, thickness);
+        self.AddLine(leftSideCenter, leftSideEdge, colorConverted, thickness);
+        self.AddLine(rightSideCenter, rightSideEdge, colorConverted, thickness);
+        self.AddLine(rightSideCenter, leftSideCenter, colorConverted, thickness);
         self.AddLine(rightSideEdge, leftSideEdge, colorConverted, thickness);
     }
 }
