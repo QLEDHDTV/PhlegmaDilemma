@@ -113,5 +113,33 @@ public class ConfigWindow : Window, IDisposable
                 Configuration.Save();
             }
         }
+
+        var debugCone = Configuration.EnableDebugCone;
+        if (ImGui.Checkbox("Debug cone", ref debugCone))
+        {
+            Configuration.EnableDebugCone = debugCone;
+            Configuration.Save();
+        }
+
+        var debugConeRadius = Configuration.DebugConeRadius;
+        if (ImGui.InputFloat("Radius", ref debugConeRadius))
+        {
+            Configuration.DebugConeRadius = debugConeRadius;
+            Configuration.Save();
+        }
+
+        var debugConeAngle = Configuration.DebugConeAngle;
+        if (ImGui.InputFloat("Angle", ref debugConeAngle))
+        {
+            Configuration.DebugConeAngle = debugConeAngle;
+            Configuration.Save();
+        }
+
+        var debugConeFollowTarget = Configuration.DebugConeFollowTarget;
+        if (ImGui.Checkbox("Follow target", ref debugConeFollowTarget))
+        {
+            Configuration.DebugConeFollowTarget = debugConeFollowTarget;
+            Configuration.Save();
+        }
     }
 }

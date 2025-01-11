@@ -24,13 +24,13 @@ public unsafe sealed class Plugin : IDalamudPlugin
     private Rangefinder Rangefinder { get; init; }
     internal DataDynamic[] data = new DataDynamic[1];
     internal ExcelSheet<Lumina.Excel.Sheets.Action> ActionSheet = DataManager.GetExcelSheet<Lumina.Excel.Sheets.Action>();
-    internal SubrowExcelSheet<Lumina.Excel.Sheets.ReplaceAction> ReplaceActionSheet = DataManager.GetSubrowExcelSheet<Lumina.Excel.Sheets.ReplaceAction>();
+    
+    internal uint[] Angle90 = new uint[] {106, 11403};
+    internal uint[] Angle180 = new uint[] {24392, 24384};
+    // Hardcoded angle values for cone actions.
     public Plugin(IDalamudPluginInterface pluginInterface)
     {
         Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
-
-        // you might normally want to embed resources and load them from the manifest stream
-        //var goatImagePath = Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "goat.png");
 
         ConfigWindow = new ConfigWindow(this);
         MainWindow = new MainWindow(this);
@@ -136,12 +136,26 @@ public unsafe sealed class Plugin : IDalamudPlugin
                     if (ActionSheet.TryGetRow(data[i].ActionID, out var row) == true)
                     {
                         data[i].ActionName = row.Name.ExtractText();
-                        ReplaceActionSheet.TryGetSubrow(1, 1, out var rowAR);
                         data[i].ActionRadius = (float)row.EffectRange;
                         data[i].DamagingAction = row.Unknown14;                 // Unknown 14 seems to determine if the action can interact with the
                         data[i].CanTargetEnemy = row.CanTargetHostile;          // hostiles but not necesserily by directly targeting them with an action. (damaging AoEs)
                         data[i].CastType = row.CastType;
                         data[i].CastWidth = row.XAxisModifier;
+                        if (data[i].CastType == 3)
+                        {
+                            if (Angle90.Contains(data[i].ActionID))
+                            {
+                                data[i].ActionAngle = 90;
+                            }
+                            else if (Angle180.Contains(data[i].ActionID))
+                            {
+                                data[i].ActionAngle = 180;
+                            }
+                            else
+                            {
+                                data[i].ActionAngle = 120;
+                            }
+                        }
                     }
                 }
             }

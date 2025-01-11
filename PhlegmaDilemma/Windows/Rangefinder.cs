@@ -109,7 +109,7 @@ internal class Rangefinder : Window , IDisposable
             Plugin.Configuration.ColorActionRange, 
             Plugin.Configuration.Thickness);
 
-            // Auto-attack range (~3.6 yalms)
+            // Auto-attack range (~3.6 yalms for melee)
             if (Configuration.EnableAutoAttackRange == true)
             {
                 ImGui.GetForegroundDrawList().AddPolycircle3D(
@@ -118,6 +118,33 @@ internal class Rangefinder : Window , IDisposable
                 Plugin.Configuration.PointsNumber,
                 Plugin.Configuration.ColorAutoAttack, 
                 Plugin.Configuration.Thickness);
+            }
+
+            // Debug cone
+            if (Configuration.EnableDebugCone == true)
+            {
+                if (Configuration.DebugConeFollowTarget == true)
+                {
+                    ImGui.GetForegroundDrawList().AddCone3D(
+                    data.PlayerPosition,
+                    data.TargetPosition,
+                    Configuration.DebugConeRadius,
+                    Plugin.Configuration.PointsNumber / 3,
+                    Configuration.DebugConeAngle,
+                    Plugin.Configuration.ColorActionRadius,
+                    Plugin.Configuration.Thickness);
+                }
+                else
+                {
+                    ImGui.GetForegroundDrawList().AddCone3D(
+                    data.PlayerPosition,
+                    playerFrontPoint,
+                    Configuration.DebugConeRadius,
+                    Plugin.Configuration.PointsNumber / 3,
+                    Configuration.DebugConeAngle,
+                    Plugin.Configuration.ColorActionRadius,
+                    Plugin.Configuration.Thickness);
+                }
             }
 
             // AoE shape
@@ -155,7 +182,7 @@ internal class Rangefinder : Window , IDisposable
                         data.TargetPosition, 
                         data.ActionRadius + 0.5f,
                         Plugin.Configuration.PointsNumber / 3, 
-                        120,
+                        data.ActionAngle,
                         Plugin.Configuration.ColorActionRadius, 
                         Plugin.Configuration.Thickness);
                     }
@@ -166,11 +193,10 @@ internal class Rangefinder : Window , IDisposable
                         playerFrontPoint, 
                         data.ActionRadius + 0.5f, 
                         Plugin.Configuration.PointsNumber / 3, 
-                        90,
+                        data.ActionAngle,
                         Plugin.Configuration.ColorActionRadius, 
                         Plugin.Configuration.Thickness);
                     }
-                    // It seems like actions that need the target have a 120 degree cone, while the ones that don't have 90 degrees.
                     break;
 
                 case 4: // Line AoE (square)

@@ -14,6 +14,10 @@ public class Configuration : IPluginConfiguration
     public Vector4 ColorTargetPointerInRange { get; set; } = new Vector4((float)0xFF / 255f, (float)0xFF / 255f, (float)0x00 / 255f, (float)0xFF / 255f);
     public float Thickness { get; set; } = 2f;
     public int PointsNumber { get; set; } = 100;
+    public bool EnableDebugCone { get; set; } = false;
+    public float DebugConeRadius { get; set; } = 5f;
+    public float DebugConeAngle { get; set; } = 90f;
+    public bool DebugConeFollowTarget { get; set; } = false;
 
     // the below exist just to make saving less cumbersome
     public void Save()

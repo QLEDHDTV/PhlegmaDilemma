@@ -3,6 +3,7 @@ namespace PhlegmaDilemma.Windows;
 public class MainWindow : Window, IDisposable
 {
     private Plugin Plugin;
+    private Configuration Configuration;
 
     // We give this window a hidden ID using ##
     // So that the user will see "My Amazing Window" as window title,
@@ -35,6 +36,6 @@ public class MainWindow : Window, IDisposable
             $"Radius: {data.ActionRadius}\n" +
             $"Damaging Action: {data.DamagingAction}\n" +
             $"Distance3D: {data.DistanceToTarget3D:F3}\n" +
-            $"Distance2D: {data.DistanceToTarget2D:F3}");
+            $"Distance2D: {data.DistanceToTarget2D:F3}\n");
     }
 }

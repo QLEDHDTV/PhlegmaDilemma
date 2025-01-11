@@ -27,8 +27,8 @@ internal struct DataDynamic
     // 5, 6, 8, 9, 10, 11, 12, 13, 14 - unknown (exclusive to enemies/npc/special actions)
     internal byte CastWidth { get; set; }
     // The width of the straight line attacks. This is the total width, not a half.
-    internal uint ReplaceActionID { get; set; }
-    internal string ReplaceActionName { get; set; }
+    internal float ActionAngle { get; set; }
+    // Variable to hold hardcoded cone angle.
     internal float DistanceToTarget3D => TargetPosition != Vector3.Zero ? (PlayerPosition - TargetPosition).Length() - TargetHitbox : 0f;
     // Probably not useful? Game seems to care more about 2D distance to a target then 3D.
     internal float DistanceToTarget2D => TargetPosition != Vector3.Zero ? PlayerPosition.Distance2D(TargetPosition) - TargetHitbox : 0f;
