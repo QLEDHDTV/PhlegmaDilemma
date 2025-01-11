@@ -81,18 +81,9 @@ public unsafe sealed class Plugin : IDalamudPlugin
     public void EnableUseActionHook() => UseActionHook.Enable();
     public void DisableUseActionHook() => UseActionHook.Disable();
     public void CheckUseActionHook() => UseActionHook.Check();
-    public void ToggleMainUI()
-    {
-        MainWindow.Toggle();
-    }
-    public void ToggleConfigUI()
-    {
-        ConfigWindow.Toggle();
-    }
-    internal void OnFrameworkUpdate(IFramework framework)
-    {
-        GetData();
-    }
+    public void ToggleMainUI() => MainWindow.Toggle();
+    public void ToggleConfigUI() => ConfigWindow.Toggle();
+    internal void OnFrameworkUpdate(IFramework framework) => GetData();
     internal DataDynamic RetrieveData()
     {
         return data[0];
