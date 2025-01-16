@@ -20,7 +20,7 @@ public unsafe sealed class Plugin : IDalamudPlugin
 
     public readonly WindowSystem WindowSystem = new("PhlegmaDilemma");
     private ConfigWindow ConfigWindow { get; init; }
-    private MainWindow MainWindow { get; init; }
+    private DebugWindow DebugWindow { get; init; }
     private Rangefinder Rangefinder { get; init; }
     internal DataDynamic[] data = new DataDynamic[1];
     internal ExcelSheet<Lumina.Excel.Sheets.Action> ActionSheet = DataManager.GetExcelSheet<Lumina.Excel.Sheets.Action>();
@@ -33,11 +33,11 @@ public unsafe sealed class Plugin : IDalamudPlugin
         Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
 
         ConfigWindow = new ConfigWindow(this);
-        MainWindow = new MainWindow(this);
+        DebugWindow = new DebugWindow(this);
         Rangefinder = new Rangefinder(this, Configuration);
 
         WindowSystem.AddWindow(ConfigWindow);
-        WindowSystem.AddWindow(MainWindow);
+        WindowSystem.AddWindow(DebugWindow);
         WindowSystem.AddWindow(Rangefinder);
 
         CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
@@ -63,7 +63,7 @@ public unsafe sealed class Plugin : IDalamudPlugin
         WindowSystem.RemoveAllWindows();
 
         ConfigWindow.Dispose();
-        MainWindow.Dispose();
+        DebugWindow.Dispose();
 
         CommandManager.RemoveHandler(CommandName);
         UseActionHook.Dispose();
@@ -81,7 +81,7 @@ public unsafe sealed class Plugin : IDalamudPlugin
     public void EnableUseActionHook() => UseActionHook.Enable();
     public void DisableUseActionHook() => UseActionHook.Disable();
     public void CheckUseActionHook() => UseActionHook.Check();
-    public void ToggleMainUI() => MainWindow.Toggle();
+    public void ToggleMainUI() => DebugWindow.Toggle();
     public void ToggleConfigUI() => ConfigWindow.Toggle();
     internal void OnFrameworkUpdate(IFramework framework) => GetData();
     internal DataDynamic RetrieveData()
