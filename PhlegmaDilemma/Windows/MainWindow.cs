@@ -28,14 +28,15 @@ public class MainWindow : Window, IDisposable
         ImGui.TextUnformatted(
             $"Player Pos: {data.PlayerPosition:F3}\n" +
             $"Player Rot: {data.PlayerRotation}\n" +
+            $"Mouse Pos: {data.MousePosition}\n" +
             $"Target: {data.Target}\n" +
             $"Target Pos: {data.TargetPosition:F3}\n" +
-            $"Target HB: {data.TargetHitbox:F3}\n" +
+            $"Distance3D: {data.DistanceToTarget3D:F3}\n" +
+            $"Distance2D: {data.DistanceToTarget2D:F3}\n" +
+            $"Target HB: {data.TargetHitbox:F3}\n\n" +
             $"ActionID: {data.ActionID} ({data.ActionName})\n" +
             $"Range: {data.ActionRange}\n" +
             $"Radius: {data.ActionRadius}\n" +
-            $"Damaging Action: {data.DamagingAction}\n" +
-            $"Distance3D: {data.DistanceToTarget3D:F3}\n" +
-            $"Distance2D: {data.DistanceToTarget2D:F3}\n");
+            $"Damaging Action: {data.DamagingAction}\n");
     }
 }

@@ -11,6 +11,7 @@ internal struct DataDynamic
     internal Vector3 PlayerPosition { get; set; }
     internal float PlayerRotation { get; set; }
     internal float PlayerHitbox { get; set; }
+    internal Vector3 MousePosition { get; set; }
     internal uint ActionID { get; set; }
     internal string ActionName { get; set; }
     internal float ActionRadius { get; set; }

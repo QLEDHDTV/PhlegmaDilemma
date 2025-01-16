@@ -211,6 +211,14 @@ internal class Rangefinder : Window , IDisposable
                             Plugin.Configuration.Thickness);
                     }
                     break;
+                case 7: // Placeables
+                    ImGui.GetForegroundDrawList().AddPolycircle3D(
+                    data.MousePosition,
+                    data.ActionRadius,
+                    Plugin.Configuration.PointsNumber,
+                    Plugin.Configuration.ColorActionRadius,
+                    Plugin.Configuration.Thickness);
+                    break;
 
                 default:
                     break;
