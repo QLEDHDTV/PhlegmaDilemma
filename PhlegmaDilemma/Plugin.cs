@@ -20,33 +20,30 @@ public unsafe sealed class Plugin : IDalamudPlugin
 
     public readonly WindowSystem WindowSystem = new("PhlegmaDilemma");
     private ConfigWindow ConfigWindow { get; init; }
-    private DebugWindow DebugWindow { get; init; }
+    private MainWindow MainWindow { get; init; }
     private Rangefinder Rangefinder { get; init; }
     internal DataDynamic[] data = new DataDynamic[1];
     internal ExcelSheet<Lumina.Excel.Sheets.Action> ActionSheet = DataManager.GetExcelSheet<Lumina.Excel.Sheets.Action>();
-    System.Timers.Timer timer;
-
-    internal uint[] Angle90 = {106, 11403};
-    internal uint[] Angle180 = {24392, 24384};
+    
+    internal uint[] Angle90 = new uint[] {106, 11403};
+    internal uint[] Angle180 = new uint[] {24392, 24384};
     // Hardcoded angle values for cone actions.
     public Plugin(IDalamudPluginInterface pluginInterface)
     {
         Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
 
         ConfigWindow = new ConfigWindow(this);
-        DebugWindow = new DebugWindow(this);
+        MainWindow = new MainWindow(this);
         Rangefinder = new Rangefinder(this, Configuration);
 
         WindowSystem.AddWindow(ConfigWindow);
-        WindowSystem.AddWindow(DebugWindow);
+        WindowSystem.AddWindow(MainWindow);
         WindowSystem.AddWindow(Rangefinder);
 
         CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
         {
             HelpMessage = "A useful message to display in /xlhelp"
         });
-
-
 
         PluginInterface.UiBuilder.Draw += DrawUI;
         PluginInterface.UiBuilder.Draw += DrawRangefinder;
@@ -55,7 +52,7 @@ public unsafe sealed class Plugin : IDalamudPlugin
         PluginInterface.UiBuilder.OpenConfigUi += ToggleConfigUI;
 
         // Adds another button that is doing the same but for the main ui of the plugin
-        PluginInterface.UiBuilder.OpenMainUi += ToggleDebug;
+        PluginInterface.UiBuilder.OpenMainUi += ToggleMainUI;
 
         Framework.Update += OnFrameworkUpdate;
         EnableUseActionHook();
@@ -66,9 +63,8 @@ public unsafe sealed class Plugin : IDalamudPlugin
         WindowSystem.RemoveAllWindows();
 
         ConfigWindow.Dispose();
-        DebugWindow.Dispose();
+        MainWindow.Dispose();
 
-        timer.Dispose();
         CommandManager.RemoveHandler(CommandName);
         UseActionHook.Dispose();
     }
@@ -76,7 +72,7 @@ public unsafe sealed class Plugin : IDalamudPlugin
     private void OnCommand(string command, string args)
     {
         // in response to the slash command, just toggle the display status of our main ui
-        ToggleDebug();
+        ToggleMainUI();
     }
 
     private void DrawUI() => WindowSystem.Draw();
@@ -85,37 +81,9 @@ public unsafe sealed class Plugin : IDalamudPlugin
     public void EnableUseActionHook() => UseActionHook.Enable();
     public void DisableUseActionHook() => UseActionHook.Disable();
     public void CheckUseActionHook() => UseActionHook.Check();
-    public void ToggleDebug() => DebugWindow.Toggle();
+    public void ToggleMainUI() => MainWindow.Toggle();
     public void ToggleConfigUI() => ConfigWindow.Toggle();
     internal void OnFrameworkUpdate(IFramework framework) => GetData();
-    public void ToggleFadeoutTimer(bool f)
-    {
-        timer = new System.Timers.Timer(Configuration.FadeDelay);
-        Log.Information("Timer toggled");
-        timer.AutoReset = true;
-        timer.Elapsed += FadeoutColor;
-        if (f == true)
-        {
-            timer.Enabled = true;
-        }
-        else
-        {
-            timer.Stop();
-            ReturnColor();
-        }
-    }
-    private void FadeoutColor(object source, System.Timers.ElapsedEventArgs e)
-    {
-        var color = Configuration.ColorAutoAttack;
-        color.W = 0x00 / 255f;
-        Configuration.ColorAutoAttack = color;
-    }
-    public void ReturnColor()
-    {
-        var color = Configuration.ColorAutoAttack;
-        color.W = 0xFF / 255f;
-        Configuration.ColorAutoAttack = color;
-    }
     internal DataDynamic RetrieveData()
     {
         return data[0];

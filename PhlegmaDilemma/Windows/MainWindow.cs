@@ -1,6 +1,6 @@
 namespace PhlegmaDilemma.Windows;
 
-public class DebugWindow : Window, IDisposable
+public class MainWindow : Window, IDisposable
 {
     private Plugin Plugin;
     private Configuration Configuration;
@@ -8,8 +8,8 @@ public class DebugWindow : Window, IDisposable
     // We give this window a hidden ID using ##
     // So that the user will see "My Amazing Window" as window title,
     // but for ImGui the ID is "My Amazing Window##With a hidden ID"
-    public DebugWindow(Plugin plugin)
-        : base("Debug##", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
+    public MainWindow(Plugin plugin)
+        : base("My Amazing Window##With a hidden ID", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
     {
         SizeConstraints = new WindowSizeConstraints
         {

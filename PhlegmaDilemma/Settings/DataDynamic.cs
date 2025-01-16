@@ -22,10 +22,9 @@ internal struct DataDynamic
     // 3 - cone
     // 4 - straigt line/square
     // 7 - placebles (sacred soil, shukuchi, asylum, liturgy of the bell, etc)
-    // 10 - donut
     // 11 - southern cross (pvp)
     // 15 - hissatsu: soten (pvp) exclusive
-    // 5, 6, 8, 9, 11, 12, 13, 14 - unknown (exclusive to enemies/npc/special actions)
+    // 5, 6, 8, 9, 10, 11, 12, 13, 14 - unknown (exclusive to enemies/npc/special actions)
     internal byte CastWidth { get; set; }
     // The width of the straight line attacks. This is the total width, not a half.
     internal float ActionAngle { get; set; }

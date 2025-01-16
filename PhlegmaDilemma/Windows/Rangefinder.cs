@@ -1,5 +1,3 @@
-using static FFXIVClientStructs.FFXIV.Component.GUI.AtkUIColorHolder.Delegates;
-
 namespace PhlegmaDilemma.Windows;
 
 internal class Rangefinder : Window , IDisposable
@@ -32,6 +30,7 @@ internal class Rangefinder : Window , IDisposable
             Vector3 focusHitboxEdgePoint = new Vector3(data.FocusTargetPosition.X - data.FocusTargetHitbox * (float)Math.Cos(focusTargetAngle), data.PlayerPosition.Y, data.FocusTargetPosition.Z - data.FocusTargetHitbox * (float)Math.Sin(focusTargetAngle));
 
             Vector3 playerFrontPoint = new Vector3(data.PlayerPosition.X + 1 * MathF.Sin(data.PlayerRotation), data.PlayerPosition.Y, data.PlayerPosition.Z + 1 * MathF.Cos(data.PlayerRotation));
+
             // Target pointer
             if (data.Target != null)
             {

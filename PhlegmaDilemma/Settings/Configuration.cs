@@ -15,9 +15,6 @@ public class Configuration : IPluginConfiguration
     public float Thickness { get; set; } = 2f;
     public int PointsNumber { get; set; } = 100;
     public bool EnableDebugCone { get; set; } = false;
-    public bool EnableFadeout { get; set; } = false;
-    public int FadeDelay { get; set; } = 5000; 
-    public int FadeSpeed { get; set; } = 10;
     public float DebugConeRadius { get; set; } = 5f;
     public float DebugConeAngle { get; set; } = 90f;
     public bool DebugConeFollowTarget { get; set; } = false;

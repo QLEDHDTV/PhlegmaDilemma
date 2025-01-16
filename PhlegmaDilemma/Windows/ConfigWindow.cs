@@ -1,11 +1,9 @@
-using Lumina.Excel.Sheets;
 using PhlegmaDilemma.Settings;
 
 namespace PhlegmaDilemma.Windows;
 
 public class ConfigWindow : Window, IDisposable
 {
-    private Plugin Plugin;
     private Configuration Configuration;
 
     // We give this window a constant ID using ###
@@ -20,7 +18,6 @@ public class ConfigWindow : Window, IDisposable
         SizeCondition = ImGuiCond.Always;
 
         Configuration = plugin.Configuration;
-        Plugin = plugin;
     }
 
     public void Dispose() { }
@@ -63,22 +60,6 @@ public class ConfigWindow : Window, IDisposable
                 Configuration.PointsNumber = resolution;
             }
             Configuration.Save();
-        }
-
-        var fadeOut = Configuration.EnableFadeout;
-        if (ImGui.Checkbox("Enable fadeout", ref fadeOut))
-        {
-            Configuration.EnableFadeout = fadeOut;
-            Configuration.Save();
-        }
-
-        if (fadeOut == true)
-        {
-            Plugin.ToggleFadeoutTimer(true);
-        }
-        else
-        {
-            Plugin.ToggleFadeoutTimer(false);
         }
 
         ImGui.Separator();
