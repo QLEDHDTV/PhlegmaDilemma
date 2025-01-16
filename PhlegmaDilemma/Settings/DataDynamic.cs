@@ -10,6 +10,7 @@ internal struct DataDynamic
     internal float FocusTargetHitbox { get; set; }
     internal Vector3 PlayerPosition { get; set; }
     internal float PlayerRotation { get; set; }
+    internal float PlayerHitbox { get; set; }
     internal uint ActionID { get; set; }
     internal string ActionName { get; set; }
     internal float ActionRadius { get; set; }
@@ -34,8 +35,7 @@ internal struct DataDynamic
     internal float DistanceToTarget2D => TargetPosition != Vector3.Zero ? PlayerPosition.Distance2D(TargetPosition) - TargetHitbox : 0f;
     internal float DistanceToFocusTarget3D => FocusTargetPosition != Vector3.Zero ? (PlayerPosition - FocusTargetPosition).Length() - FocusTargetHitbox : 0f;
     internal float DistanceToFocusTarget2D => FocusTargetPosition != Vector3.Zero ? PlayerPosition.Distance2D(FocusTargetPosition) - FocusTargetHitbox : 0f;
-    internal float ActionRange => ActionManager.GetActionRange(ActionID) != 0 ? ActionManager.GetActionRange(ActionID) + 0.5f : 0f;
-    // Action range have additional 0.5 yalms added because this is the radius of the player hitbox.
-    // It seems like the range calculation for actions start at the edge of the player hitbox, and not at the center.
+    internal float ActionRange => ActionManager.GetActionRange(ActionID) != 0 ? ActionManager.GetActionRange(ActionID) + PlayerHitbox : 0f;
+    // Range calculation for actions start at the edge of the player hitbox, and not at the center.
     // Same applies for cone shaped AoEs.
 }

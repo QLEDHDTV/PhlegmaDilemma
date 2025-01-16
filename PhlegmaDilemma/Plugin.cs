@@ -121,6 +121,7 @@ public unsafe sealed class Plugin : IDalamudPlugin
                 }
                 data[i].PlayerPosition = ClientState.LocalPlayer.Position;
                 data[i].PlayerRotation = ClientState.LocalPlayer.Rotation;
+                data[i].PlayerHitbox = ClientState.LocalPlayer.HitboxRadius;
                 if (UseActionHook.RetrieveActionID() != 0)
                 {
                     data[i].ActionID = ActionManager.Instance()->GetAdjustedActionId(UseActionHook.RetrieveActionID());
