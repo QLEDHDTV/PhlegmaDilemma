@@ -114,6 +114,8 @@ public class ConfigWindow : Window, IDisposable
             }
         }
 
+        ImGui.Separator();
+
         var debugCone = Configuration.EnableDebugCone;
         if (ImGui.Checkbox("Debug cone", ref debugCone))
         {

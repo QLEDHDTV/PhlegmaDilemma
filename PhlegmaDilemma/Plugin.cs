@@ -14,7 +14,7 @@ public unsafe sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IFramework Framework { get; private set; } = null!;
     [PluginService] internal static IDataManager DataManager { get; private set; } = null!;
 
-    private const string CommandName = "/pmycommand";
+    private const string CommandName = "/pd";
 
     public Configuration Configuration { get; init; }
 
@@ -25,8 +25,8 @@ public unsafe sealed class Plugin : IDalamudPlugin
     internal DataDynamic[] data = new DataDynamic[1];
     internal ExcelSheet<Lumina.Excel.Sheets.Action> ActionSheet = DataManager.GetExcelSheet<Lumina.Excel.Sheets.Action>();
     
-    internal uint[] Angle90 = new uint[] {106, 11403};
-    internal uint[] Angle180 = new uint[] {24392, 24384};
+    internal uint[] Angle90 = {106, 2870, 11403};
+    internal uint[] Angle180 = {24392, 24384};
     // Hardcoded angle values for cone actions.
     public Plugin(IDalamudPluginInterface pluginInterface)
     {
@@ -42,7 +42,7 @@ public unsafe sealed class Plugin : IDalamudPlugin
 
         CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
         {
-            HelpMessage = "A useful message to display in /xlhelp"
+            HelpMessage = "Open the settings"
         });
 
         PluginInterface.UiBuilder.Draw += DrawUI;
@@ -72,7 +72,7 @@ public unsafe sealed class Plugin : IDalamudPlugin
     private void OnCommand(string command, string args)
     {
         // in response to the slash command, just toggle the display status of our main ui
-        ToggleMainUI();
+        ToggleConfigUI();
     }
 
     private void DrawUI() => WindowSystem.Draw();
