@@ -18,8 +18,6 @@ public class Configuration : IPluginConfiguration
     public float DebugConeRadius { get; set; } = 5f;
     public float DebugConeAngle { get; set; } = 90f;
     public bool DebugConeFollowTarget { get; set; } = false;
-
-    // the below exist just to make saving less cumbersome
     public void Save()
     {
         PluginInterface.SavePluginConfig(this);

@@ -4,10 +4,6 @@ public class DebugWindow : Window, IDisposable
 {
     private Plugin Plugin;
     private Configuration Configuration;
-
-    // We give this window a hidden ID using ##
-    // So that the user will see "My Amazing Window" as window title,
-    // but for ImGui the ID is "My Amazing Window##With a hidden ID"
     public DebugWindow(Plugin plugin)
         : base("My Amazing Window##With a hidden ID", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
     {

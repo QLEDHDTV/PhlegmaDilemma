@@ -1,7 +1,3 @@
-using Dalamud.Game.ClientState.Objects.Types;
-using FFXIVClientStructs.FFXIV.Client.UI.Misc;
-using PhlegmaDilemma.Settings;
-
 namespace PhlegmaDilemma;
 
 internal static class ImGuiExtensions
