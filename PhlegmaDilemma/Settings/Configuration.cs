@@ -20,6 +20,6 @@ public class Configuration : IPluginConfiguration
     public bool DebugConeFollowTarget { get; set; } = false;
     public void Save()
     {
-        PluginInterface.SavePluginConfig(this);
+        Plugin.PluginInterface.SavePluginConfig(this);
     }
 }
