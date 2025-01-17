@@ -11,6 +11,8 @@ internal struct DataDynamic
     internal Vector3 PlayerPosition { get; set; }
     internal float PlayerRotation { get; set; }
     internal float PlayerHitbox { get; set; }
+    internal float PlayerAutoAttackRadius { get; set; }
+    // 3.6 yalms for melee, 25.6 for ranged
     internal Vector3 MousePosition { get; set; }
     internal uint ActionID { get; set; }
     internal string ActionName { get; set; }

@@ -109,12 +109,12 @@ internal class Rangefinder : Window , IDisposable
             Plugin.Configuration.ColorActionRange, 
             Plugin.Configuration.Thickness);
 
-            // Auto-attack range (~3.6 yalms for melee)
+            // Auto-attack range
             if (Configuration.EnableAutoAttackRange == true)
             {
                 ImGui.GetForegroundDrawList().AddPolycircle3D(
                 data.PlayerPosition, 
-                3.6f, 
+                data.PlayerAutoAttackRadius, 
                 Plugin.Configuration.PointsNumber,
                 Plugin.Configuration.ColorAutoAttack, 
                 Plugin.Configuration.Thickness);

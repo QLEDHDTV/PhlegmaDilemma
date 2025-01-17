@@ -122,8 +122,19 @@ public unsafe sealed class Plugin : IDalamudPlugin
                 data[i].PlayerPosition = ClientState.LocalPlayer.Position;
                 data[i].PlayerRotation = ClientState.LocalPlayer.Rotation;
                 data[i].PlayerHitbox = ClientState.LocalPlayer.HitboxRadius;
+                if (new uint[]{5, 23, 31, 38}.Contains(ClientState.LocalPlayer.ClassJob.Value.RowId)) // Ranged auto attack range
+                {
+                    
+                    data[i].PlayerAutoAttackRadius = 25.6f;
+                }
+                else
+                {
+                    data[i].PlayerAutoAttackRadius = 3.6f;
+                }
+
                 GameGui.ScreenToWorld(ImGui.GetMousePos(), out Vector3 worldSpace);
                 data[i].MousePosition = worldSpace;
+
                 if (UseActionHook.RetrieveActionID() != 0)
                 {
                     data[i].ActionID = ActionManager.Instance()->GetAdjustedActionId(UseActionHook.RetrieveActionID());
