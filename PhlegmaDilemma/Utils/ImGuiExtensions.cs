@@ -64,4 +64,19 @@ internal static class ImGuiExtensions
         self.AddLine(rightSideCenter, leftSideCenter, colorConverted, thickness);
         self.AddLine(rightSideEdge, leftSideEdge, colorConverted, thickness);
     }
+
+    public static void AddScale3D(this ImDrawListPtr self, Vector3 startPos, Vector3 endPos, float distance, float offset, int range, float width, Vector4 color, float thickness)
+    {
+        uint colorConverted = ImGuiUtils.Vec4ToUInt(color);
+        float angle = (float)Math.Atan2(endPos.X - startPos.X, endPos.Z - startPos.Z);
+        Plugin.GameGui.WorldToScreen(startPos, out Vector2 screenSpaceStart);
+        Plugin.GameGui.WorldToScreen(endPos, out Vector2 screenSpaceEnd);
+        Vector3 direction = Vector3.Normalize(endPos - startPos);
+        for (float i = 0; i < distance - offset; i += range)
+        {
+            Plugin.GameGui.WorldToScreen(new Vector3(startPos.X + (direction.X * i) + (width / 2) * (float)Math.Cos(angle), startPos.Y, startPos.Z + (direction.Z * i) - (width / 2) * (float)Math.Sin(angle)), out Vector2 leftPoint);
+            Plugin.GameGui.WorldToScreen(new Vector3(startPos.X + (direction.X * i) - (width / 2) * (float)Math.Cos(angle), startPos.Y, startPos.Z + (direction.Z * i) + (width / 2) * (float)Math.Sin(angle)), out Vector2 rightPoint);
+            self.AddLine(leftPoint, rightPoint, colorConverted, thickness);
+        }
+    }
 }

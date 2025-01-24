@@ -24,6 +24,7 @@ internal class Rangefinder : Window , IDisposable
             Vector3 actionRangeEdgePoint = new Vector3(data.PlayerPosition.X + data.ActionRange * (float)Math.Cos(targetAngle), data.PlayerPosition.Y, data.PlayerPosition.Z + data.ActionRange * (float)Math.Sin(targetAngle));
             Vector3 actionRadiusEdgePoint = new Vector3(data.PlayerPosition.X + (data.ActionRadius + 0.5f) * (float)Math.Cos(targetAngle), data.PlayerPosition.Y, data.PlayerPosition.Z + (data.ActionRadius + 0.5f) * (float)Math.Sin(targetAngle));
             Vector3 targetHitboxEdgePoint = new Vector3(data.TargetPosition.X - data.TargetHitbox * (float)Math.Cos(targetAngle), data.PlayerPosition.Y, data.TargetPosition.Z - data.TargetHitbox * (float)Math.Sin(targetAngle));
+            Vector3 playerHitboxEdgePoint = new Vector3(data.PlayerPosition.X - (-data.PlayerHitbox) * (float)Math.Cos(targetAngle), data.PlayerPosition.Y, data.PlayerPosition.Z - (-data.PlayerHitbox) * (float)Math.Sin(targetAngle));
 
             float focusTargetAngle = (float)Math.Atan2(data.FocusTargetPosition.Z - data.PlayerPosition.Z, data.FocusTargetPosition.X - data.PlayerPosition.X);
             Vector3 focusActionRangeEdgePoint = new Vector3(data.PlayerPosition.X + data.ActionRange * (float)Math.Cos(focusTargetAngle), data.PlayerPosition.Y, data.PlayerPosition.Z + data.ActionRange * (float)Math.Sin(focusTargetAngle));
@@ -48,6 +49,17 @@ internal class Rangefinder : Window , IDisposable
                     Plugin.Configuration.PointsNumber,
                     Plugin.Configuration.ColorTargetPointerInRange,
                     Plugin.Configuration.Thickness);
+
+                    ImGui.GetForegroundDrawList().AddScale3D(
+                    playerHitboxEdgePoint,
+                    targetHitboxEdgePoint,
+                    data.DistanceToTarget2D,
+                    data.PlayerHitbox,
+                    1,
+                    1,
+                    Plugin.Configuration.ColorTargetPointerInRange,
+                    Plugin.Configuration.Thickness);
+
                 }
                 else
                 {
@@ -61,6 +73,16 @@ internal class Rangefinder : Window , IDisposable
                     new Vector3(data.TargetPosition.X, data.PlayerPosition.Y, data.TargetPosition.Z),
                     data.TargetHitbox,
                     Plugin.Configuration.PointsNumber,
+                    Plugin.Configuration.ColorTargetPointerOutOfRange,
+                    Plugin.Configuration.Thickness);
+
+                    ImGui.GetForegroundDrawList().AddScale3D(
+                    playerHitboxEdgePoint,
+                    targetHitboxEdgePoint,
+                    data.DistanceToTarget2D,
+                    data.PlayerHitbox,
+                    1,
+                    1,
                     Plugin.Configuration.ColorTargetPointerOutOfRange,
                     Plugin.Configuration.Thickness);
                 }
