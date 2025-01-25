@@ -36,6 +36,13 @@ public class ConfigWindow : Window, IDisposable
             Configuration.Save();
         }
 
+        var rulerEnabler = Configuration.EnableRuler;
+        if (ImGui.Checkbox("Enable range ruler", ref rulerEnabler))
+        {
+            Configuration.EnableRuler = rulerEnabler;
+            Configuration.Save();
+        }
+
         ImGui.Separator();
 
         var thickness = Configuration.Thickness;

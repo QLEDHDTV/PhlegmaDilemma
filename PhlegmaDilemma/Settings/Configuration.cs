@@ -7,6 +7,7 @@ public class Configuration : IPluginConfiguration
     public int Version { get; set; } = 0;
     public bool EnableRangefinder { get; set; } = true;
     public bool EnableAutoAttackRange {  get; set; } = true;
+    public bool EnableRuler { get; set; } = false;
     public Vector4 ColorActionRange { get; set; } = new Vector4((float)0xFF / 255f, (float)0x00 / 255f, (float)0x00 / 255f, (float)0xFF / 255f);
     public Vector4 ColorActionRadius { get; set; } = new Vector4((float)0x00 / 255f, (float)0xFF / 255f, (float)0x00 / 255f, (float)0xFF / 255f);
     public Vector4 ColorAutoAttack { get; set; } = new Vector4((float)0x00 / 255f, (float)0x00 / 255f, (float)0xFF / 255f, (float)0xFF / 255f);

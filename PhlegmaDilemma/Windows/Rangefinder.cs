@@ -50,15 +50,18 @@ internal class Rangefinder : Window , IDisposable
                     Plugin.Configuration.ColorTargetPointerInRange,
                     Plugin.Configuration.Thickness);
 
-                    ImGui.GetForegroundDrawList().AddScale3D(
-                    playerHitboxEdgePoint,
-                    targetHitboxEdgePoint,
-                    data.DistanceToTarget2D,
-                    data.PlayerHitbox,
-                    1,
-                    1,
-                    Plugin.Configuration.ColorTargetPointerInRange,
-                    Plugin.Configuration.Thickness);
+                    if (Configuration.EnableRuler == true)
+                    {
+                        ImGui.GetForegroundDrawList().AddScale3D(
+                        playerHitboxEdgePoint,
+                        targetHitboxEdgePoint,
+                        data.DistanceToTarget2D,
+                        data.PlayerHitbox,
+                        1,
+                        1,
+                        Plugin.Configuration.ColorTargetPointerInRange,
+                        Plugin.Configuration.Thickness);
+                    }
 
                 }
                 else
@@ -76,15 +79,18 @@ internal class Rangefinder : Window , IDisposable
                     Plugin.Configuration.ColorTargetPointerOutOfRange,
                     Plugin.Configuration.Thickness);
 
-                    ImGui.GetForegroundDrawList().AddScale3D(
-                    playerHitboxEdgePoint,
-                    targetHitboxEdgePoint,
-                    data.DistanceToTarget2D,
-                    data.PlayerHitbox,
-                    1,
-                    1,
-                    Plugin.Configuration.ColorTargetPointerOutOfRange,
-                    Plugin.Configuration.Thickness);
+                    if (Configuration.EnableRuler == true)
+                    {
+                        ImGui.GetForegroundDrawList().AddScale3D(
+                        playerHitboxEdgePoint,
+                        targetHitboxEdgePoint,
+                        data.DistanceToTarget2D,
+                        data.PlayerHitbox,
+                        1,
+                        1,
+                        Plugin.Configuration.ColorTargetPointerOutOfRange,
+                        Plugin.Configuration.Thickness);
+                    }
                 }
             }
 
