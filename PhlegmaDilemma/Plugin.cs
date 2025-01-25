@@ -161,5 +161,9 @@ public unsafe sealed class Plugin : IDalamudPlugin
                 }
             }
         }
+        else
+        {
+            data[0].Dispose();
+        }
     }
 }

@@ -41,4 +41,27 @@ internal struct DataDynamic
     internal float ActionRange => ActionManager.GetActionRange(ActionID) != 0 ? ActionManager.GetActionRange(ActionID) + PlayerHitbox : 0f;
     // Range calculation for actions start at the edge of the player hitbox, and not at the center.
     // Same applies for cone shaped AoEs.
+
+    public void Dispose() 
+    {
+        Target = null;
+        TargetPosition = Vector3.Zero;
+        TargetHitbox = 0f;
+        FocusTarget = null;
+        FocusTargetPosition = Vector3.Zero;
+        FocusTargetHitbox = 0f;
+        PlayerPosition = Vector3.Zero;
+        PlayerRotation = 0f;
+        PlayerHitbox = 0f;
+        PlayerAutoAttackRadius = 0f;
+        MousePosition = Vector3.Zero;
+        ActionID = 0;
+        ActionName = string.Empty;
+        ActionRadius = 0f;
+        DamagingAction = false;
+        CanTargetEnemy = false;
+        CastType = 0;
+        CastWidth = 0;
+        ActionAngle = 0f;
+    }
 }
