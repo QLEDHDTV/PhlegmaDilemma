@@ -7,8 +7,7 @@ public class ConfigWindow : Window, IDisposable
     private Configuration Configuration;
     public ConfigWindow(Plugin plugin) : base("Rangefinder Configuration###")
     {
-        Flags = ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
-                ImGuiWindowFlags.NoScrollWithMouse;
+        Flags = ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse;
 
         Size = new Vector2(400, 600);
         SizeCondition = ImGuiCond.Always;
