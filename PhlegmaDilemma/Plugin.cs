@@ -1,3 +1,8 @@
+using Dalamud.Game.ClientState.Objects.Enums;
+using Dalamud.Game.ClientState.Objects.SubKinds;
+using Dalamud.Game.ClientState.Party;
+using System.Linq;
+
 namespace PhlegmaDilemma;
 
 public unsafe sealed class Plugin : IDalamudPlugin
@@ -13,6 +18,8 @@ public unsafe sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IPluginLog PluginLog { get; private set; } = null!;
     [PluginService] internal static IFramework Framework { get; private set; } = null!;
     [PluginService] internal static IDataManager DataManager { get; private set; } = null!;
+    [PluginService] internal static IObjectTable ObjectTable { get; private set; } = null!;
+    [PluginService] internal static IPartyList PartyList { get; private set; } = null!;
 
     private const string CommandName = "/pd";
 
@@ -118,9 +125,9 @@ public unsafe sealed class Plugin : IDalamudPlugin
                 data[i].PlayerPosition = ClientState.LocalPlayer.Position;
                 data[i].PlayerRotation = ClientState.LocalPlayer.Rotation;
                 data[i].PlayerHitbox = ClientState.LocalPlayer.HitboxRadius;
-                if (new uint[]{5, 23, 31, 38}.Contains(ClientState.LocalPlayer.ClassJob.Value.RowId)) // Ranged auto attack range
+                if (new uint[] { 5, 23, 31, 38 }.Contains(ClientState.LocalPlayer.ClassJob.Value.RowId)) // Ranged auto attack range
                 {
-                    
+
                     data[i].PlayerAutoAttackRadius = 25.6f;
                 }
                 else
@@ -159,6 +166,11 @@ public unsafe sealed class Plugin : IDalamudPlugin
                         }
                     }
                 }
+
+                // Search for all IBattleChara and IPlayerCharacter objects within 30 yalms
+                data[i].InRangeEnemyTargets = ObjectTable.Where(obj => obj.Position.Distance2D(ClientState.LocalPlayer.Position) <= 30 && obj is IBattleNpc && obj.IsTargetable && (data[i].Target != null ? obj.EntityId != data[i].Target.EntityId : true)).ToArray();
+                var nearbyCharacters = ObjectTable.Where(obj => obj != ClientState.LocalPlayer && obj.Position.Distance2D(ClientState.LocalPlayer.Position) <= 30 && obj is IPlayerCharacter && (data[i].Target != null ? obj.EntityId != data[i].Target.EntityId : true)).ToArray();
+                data[i].InRangeChars = nearbyCharacters.Where(obj => PartyList.Any(x => x.ObjectId == obj.EntityId)).ToArray();
             }
         }
         else
