@@ -447,6 +447,21 @@ internal class Rangefinder : Window , IDisposable
                             }
                         }
                         break;
+
+                    case (7, false, _):
+                        foreach (var potentialTarget in data.InRangeChars)
+                        {
+                            if (data.MousePosition.Distance2D(potentialTarget.Position) <= data.ActionRadius + potentialTarget.HitboxRadius)
+                            {
+                                ImGui.GetForegroundDrawList().AddPolycircle3D(
+                                new Vector3(potentialTarget.Position.X, data.PlayerPosition.Y, potentialTarget.Position.Z),
+                                potentialTarget.HitboxRadius,
+                                Plugin.Configuration.PointsNumber,
+                                Plugin.Configuration.ColorTargetPointerInRange,
+                                Plugin.Configuration.Thickness);
+                            }
+                        }
+                        break;
                 }
 
             }
