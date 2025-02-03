@@ -71,6 +71,8 @@ public class ConfigWindow : Window, IDisposable
             Configuration.Save();
         }
 
+        ImGui.TextUnformatted("Re-enable fade-out to apply new delay.");
+
         var fadeOutDelay = Configuration.FadeOutDelay;
         if (ImGui.InputFloat("Fade-out delay", ref fadeOutDelay))
         {
