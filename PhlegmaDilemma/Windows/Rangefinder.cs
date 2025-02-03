@@ -249,33 +249,6 @@ internal class Rangefinder : Window , IDisposable
                 Plugin.Configuration.Thickness);
             }
 
-            // Debug cone
-            if (Configuration.EnableDebugCone == true)
-            {
-                if (Configuration.DebugConeFollowTarget == true)
-                {
-                    ImGui.GetForegroundDrawList().AddCone3D(
-                    data.PlayerPosition,
-                    data.TargetPosition,
-                    Configuration.DebugConeRadius,
-                    Plugin.Configuration.PointsNumber / 3,
-                    Configuration.DebugConeAngle,
-                    localColorActionRadius,
-                    Plugin.Configuration.Thickness);
-                }
-                else
-                {
-                    ImGui.GetForegroundDrawList().AddCone3D(
-                    data.PlayerPosition,
-                    playerFrontPoint,
-                    Configuration.DebugConeRadius,
-                    Plugin.Configuration.PointsNumber / 3,
-                    Configuration.DebugConeAngle,
-                    localColorActionRadius,
-                    Plugin.Configuration.Thickness);
-                }
-            }
-
             // AoE shape
             switch (data.CastType)
             {
@@ -498,6 +471,33 @@ internal class Rangefinder : Window , IDisposable
                         break;
                 }
 
+            }
+
+            // Debug cone
+            if (Configuration.EnableDebugCone == true)
+            {
+                if (Configuration.DebugConeFollowTarget == true)
+                {
+                    ImGui.GetForegroundDrawList().AddCone3D(
+                    data.PlayerPosition,
+                    data.TargetPosition,
+                    Configuration.DebugConeRadius,
+                    Plugin.Configuration.PointsNumber,
+                    Configuration.DebugConeAngle,
+                    Configuration.DebugConeColor,
+                    Plugin.Configuration.Thickness);
+                }
+                else
+                {
+                    ImGui.GetForegroundDrawList().AddCone3D(
+                    data.PlayerPosition,
+                    playerFrontPoint,
+                    Configuration.DebugConeRadius,
+                    Plugin.Configuration.PointsNumber,
+                    Configuration.DebugConeAngle,
+                    Configuration.DebugConeColor,
+                    Plugin.Configuration.Thickness);
+                }
             }
         }
     }
