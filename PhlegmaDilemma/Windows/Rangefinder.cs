@@ -4,21 +4,55 @@ internal class Rangefinder : Window , IDisposable
 {
     private Plugin Plugin;
     private Configuration Configuration;
-    public Rangefinder(Plugin plugin, Configuration config):base("Rangefinder##", ImGuiUtils.OverlayWindowFlags)
+    private static System.Timers.Timer timer;
+    private CancellationTokenSource cts;
+    private readonly object lockObject = new();
+    private bool TimerState = false;
+    private Vector4 localColorActionRange;
+    private Vector4 localColorActionRadius;
+    private Vector4 localColorAutoAttack;
+    private Vector4 localColorTargetPointerOutOfRange;
+    private Vector4 localColorTargetPointerInRange;
+
+    public Rangefinder(Plugin plugin, Configuration config) :base("Rangefinder##", ImGuiUtils.OverlayWindowFlags)
     {
         Plugin = plugin;
         Configuration = config;
+
+        localColorActionRange = Configuration.ColorActionRange;
+        localColorActionRadius = Configuration.ColorActionRadius;
+        localColorAutoAttack = Configuration.ColorAutoAttack;
+        localColorTargetPointerOutOfRange = Configuration.ColorTargetPointerOutOfRange;
+        localColorTargetPointerInRange = Configuration.ColorTargetPointerInRange;
     }
 
     public void Dispose()
     {
-
+        if (timer != null)
+        {
+            timer.Dispose();
+        }
     }
 
     public override void Draw()
     {
         if (Configuration.EnableRangefinder == true)
         {
+            if (Configuration.EnableFadeOut == true && TimerState == false)
+            {
+                InitializeTimer(Configuration.FadeOutDelay * 1000);
+                TimerState = true;
+            }
+            else if (Configuration.EnableFadeOut == false && TimerState == true)
+            {
+                if (timer != null)
+                {
+                    timer.Dispose();
+                }
+                TimerState = false;
+                localColorActionRange.W = localColorActionRadius.W = localColorAutoAttack.W = localColorTargetPointerOutOfRange.W = localColorTargetPointerInRange.W = (float)0xFF / 255f;
+            }
+
             DataDynamic data = Plugin.RetrieveData();
             float targetAngle = (float)Math.Atan2(data.TargetPosition.Z - data.PlayerPosition.Z, data.TargetPosition.X - data.PlayerPosition.X);
             Vector3 actionEdgeLineLeft = Vector3.Zero, actionEdgeLineRight = Vector3.Zero, actionRadiusEdgeLineLeft = Vector3.Zero, actionRadiusEdgeLineRight = Vector3.Zero;
@@ -107,14 +141,14 @@ internal class Rangefinder : Window , IDisposable
                     ImGui.GetForegroundDrawList().AddLine3D(
                     actionRangeEdgePoint,
                     targetHitboxEdgePoint,
-                    Plugin.Configuration.ColorTargetPointerInRange,
+                    localColorTargetPointerInRange,
                     Plugin.Configuration.Thickness);
 
                     ImGui.GetForegroundDrawList().AddPolycircle3D(
                     new Vector3(data.TargetPosition.X, data.PlayerPosition.Y, data.TargetPosition.Z),
                     data.TargetHitbox,
                     Plugin.Configuration.PointsNumber,
-                    Plugin.Configuration.ColorTargetPointerInRange,
+                    localColorTargetPointerInRange,
                     Plugin.Configuration.Thickness);
 
                     if (Configuration.EnableRuler == true)
@@ -126,7 +160,7 @@ internal class Rangefinder : Window , IDisposable
                         data.PlayerHitbox,
                         1,
                         1,
-                        Plugin.Configuration.ColorTargetPointerInRange,
+                        localColorTargetPointerInRange,
                         Plugin.Configuration.Thickness);
                     }
 
@@ -136,14 +170,14 @@ internal class Rangefinder : Window , IDisposable
                     ImGui.GetForegroundDrawList().AddLine3D(
                     actionRangeEdgePoint,
                     targetHitboxEdgePoint,
-                    Plugin.Configuration.ColorTargetPointerOutOfRange,
+                    localColorTargetPointerOutOfRange,
                     Plugin.Configuration.Thickness);
 
                     ImGui.GetForegroundDrawList().AddPolycircle3D(
                     new Vector3(data.TargetPosition.X, data.PlayerPosition.Y, data.TargetPosition.Z),
                     data.TargetHitbox,
                     Plugin.Configuration.PointsNumber,
-                    Plugin.Configuration.ColorTargetPointerOutOfRange,
+                    localColorTargetPointerOutOfRange,
                     Plugin.Configuration.Thickness);
 
                     if (Configuration.EnableRuler == true)
@@ -155,7 +189,7 @@ internal class Rangefinder : Window , IDisposable
                         data.PlayerHitbox,
                         1,
                         1,
-                        Plugin.Configuration.ColorTargetPointerOutOfRange,
+                        localColorTargetPointerOutOfRange,
                         Plugin.Configuration.Thickness);
                     }
                 }
@@ -169,14 +203,14 @@ internal class Rangefinder : Window , IDisposable
                     ImGui.GetForegroundDrawList().AddLine3D(
                     focusActionRangeEdgePoint,
                     focusHitboxEdgePoint,
-                    Plugin.Configuration.ColorTargetPointerInRange,
+                    localColorTargetPointerInRange,
                     Plugin.Configuration.Thickness);
 
                     ImGui.GetForegroundDrawList().AddPolycircle3D(
                     new Vector3(data.FocusTargetPosition.X, data.PlayerPosition.Y, data.FocusTargetPosition.Z),
                     data.FocusTargetHitbox,
                     Plugin.Configuration.PointsNumber,
-                    Plugin.Configuration.ColorTargetPointerInRange,
+                    localColorTargetPointerInRange,
                     Plugin.Configuration.Thickness);
                 }
                 else
@@ -184,14 +218,14 @@ internal class Rangefinder : Window , IDisposable
                     ImGui.GetForegroundDrawList().AddLine3D(
                     focusActionRangeEdgePoint,
                     focusHitboxEdgePoint,
-                    Plugin.Configuration.ColorTargetPointerOutOfRange,
+                    localColorTargetPointerOutOfRange,
                     Plugin.Configuration.Thickness);
 
                     ImGui.GetForegroundDrawList().AddPolycircle3D(
                     new Vector3(data.FocusTargetPosition.X, data.PlayerPosition.Y, data.FocusTargetPosition.Z),
                     data.FocusTargetHitbox,
                     Plugin.Configuration.PointsNumber,
-                    Plugin.Configuration.ColorTargetPointerOutOfRange,
+                    localColorTargetPointerOutOfRange,
                     Plugin.Configuration.Thickness);
                 }
             }
@@ -201,7 +235,7 @@ internal class Rangefinder : Window , IDisposable
             data.PlayerPosition,
             data.ActionRange,
             Plugin.Configuration.PointsNumber,
-            Plugin.Configuration.ColorActionRange,
+            localColorActionRange,
             Plugin.Configuration.Thickness);
 
             // Auto-attack range
@@ -211,7 +245,7 @@ internal class Rangefinder : Window , IDisposable
                 data.PlayerPosition,
                 data.PlayerAutoAttackRadius,
                 Plugin.Configuration.PointsNumber,
-                Plugin.Configuration.ColorAutoAttack,
+                localColorAutoAttack,
                 Plugin.Configuration.Thickness);
             }
 
@@ -226,7 +260,7 @@ internal class Rangefinder : Window , IDisposable
                     Configuration.DebugConeRadius,
                     Plugin.Configuration.PointsNumber / 3,
                     Configuration.DebugConeAngle,
-                    Plugin.Configuration.ColorActionRadius,
+                    localColorActionRadius,
                     Plugin.Configuration.Thickness);
                 }
                 else
@@ -237,7 +271,7 @@ internal class Rangefinder : Window , IDisposable
                     Configuration.DebugConeRadius,
                     Plugin.Configuration.PointsNumber / 3,
                     Configuration.DebugConeAngle,
-                    Plugin.Configuration.ColorActionRadius,
+                    localColorActionRadius,
                     Plugin.Configuration.Thickness);
                 }
             }
@@ -254,7 +288,7 @@ internal class Rangefinder : Window , IDisposable
                             new Vector3(data.TargetPosition.X, data.PlayerPosition.Y, data.TargetPosition.Z),
                             data.ActionRadius,
                             Plugin.Configuration.PointsNumber,
-                            Plugin.Configuration.ColorActionRadius,
+                            localColorActionRadius,
                             Plugin.Configuration.Thickness);
                         }
                     }
@@ -264,7 +298,7 @@ internal class Rangefinder : Window , IDisposable
                         data.PlayerPosition,
                         data.ActionRadius,
                         Plugin.Configuration.PointsNumber,
-                        Plugin.Configuration.ColorActionRadius,
+                        localColorActionRadius,
                         Plugin.Configuration.Thickness);
                     }
                     break;
@@ -278,7 +312,7 @@ internal class Rangefinder : Window , IDisposable
                         data.ActionRadius + 0.5f,
                         Plugin.Configuration.PointsNumber / 3,
                         data.ActionAngle,
-                        Plugin.Configuration.ColorActionRadius,
+                        localColorActionRadius,
                         Plugin.Configuration.Thickness);
                     }
                     else if (data.CanTargetEnemy == false) // Some cone actions don't need to have a target to use it.
@@ -289,7 +323,7 @@ internal class Rangefinder : Window , IDisposable
                         data.ActionRadius + 0.5f,
                         Plugin.Configuration.PointsNumber / 3,
                         data.ActionAngle,
-                        Plugin.Configuration.ColorActionRadius,
+                        localColorActionRadius,
                         Plugin.Configuration.Thickness);
                     }
                     break;
@@ -302,7 +336,7 @@ internal class Rangefinder : Window , IDisposable
                             data.TargetPosition,
                             actionRadiusEdgePoint,
                             data.CastWidth,
-                            Plugin.Configuration.ColorActionRadius,
+                            localColorActionRadius,
                             Plugin.Configuration.Thickness);
                     }
                     break;
@@ -311,7 +345,7 @@ internal class Rangefinder : Window , IDisposable
                     data.MousePosition,
                     data.ActionRadius,
                     Plugin.Configuration.PointsNumber,
-                    Plugin.Configuration.ColorActionRadius,
+                    localColorActionRadius,
                     Plugin.Configuration.Thickness);
                     break;
 
@@ -333,7 +367,7 @@ internal class Rangefinder : Window , IDisposable
                                 new Vector3(potentialTarget.Position.X, data.PlayerPosition.Y, potentialTarget.Position.Z),
                                 potentialTarget.HitboxRadius,
                                 Plugin.Configuration.PointsNumber,
-                                Plugin.Configuration.ColorTargetPointerInRange,
+                                localColorTargetPointerInRange,
                                 Plugin.Configuration.Thickness);
                             }
                         }
@@ -348,7 +382,7 @@ internal class Rangefinder : Window , IDisposable
                                 new Vector3(potentialTarget.Position.X, data.PlayerPosition.Y, potentialTarget.Position.Z),
                                 potentialTarget.HitboxRadius,
                                 Plugin.Configuration.PointsNumber,
-                                Plugin.Configuration.ColorTargetPointerInRange,
+                                localColorTargetPointerInRange,
                                 Plugin.Configuration.Thickness);
                             }
                         }
@@ -363,7 +397,7 @@ internal class Rangefinder : Window , IDisposable
                                 new Vector3(potentialTarget.Position.X, data.PlayerPosition.Y, potentialTarget.Position.Z),
                                 potentialTarget.HitboxRadius,
                                 Plugin.Configuration.PointsNumber,
-                                Plugin.Configuration.ColorTargetPointerInRange,
+                                localColorTargetPointerInRange,
                                 Plugin.Configuration.Thickness);
                             }
                         }
@@ -386,7 +420,7 @@ internal class Rangefinder : Window , IDisposable
                                     new Vector3(potentialTarget.Position.X, data.PlayerPosition.Y, potentialTarget.Position.Z),
                                     potentialTarget.HitboxRadius,
                                     Plugin.Configuration.PointsNumber,
-                                    Plugin.Configuration.ColorTargetPointerInRange,
+                                    localColorTargetPointerInRange,
                                     Plugin.Configuration.Thickness);
                                 }
                             }
@@ -412,7 +446,7 @@ internal class Rangefinder : Window , IDisposable
                                     new Vector3(potentialTarget.Position.X, data.PlayerPosition.Y, potentialTarget.Position.Z),
                                     potentialTarget.HitboxRadius,
                                     Plugin.Configuration.PointsNumber,
-                                    Plugin.Configuration.ColorTargetPointerInRange,
+                                    localColorTargetPointerInRange,
                                     Plugin.Configuration.Thickness);
                                 }
                             }
@@ -441,7 +475,7 @@ internal class Rangefinder : Window , IDisposable
                                     new Vector3(potentialTarget.Position.X, data.PlayerPosition.Y, potentialTarget.Position.Z),
                                     potentialTarget.HitboxRadius,
                                     Plugin.Configuration.PointsNumber,
-                                    Plugin.Configuration.ColorTargetPointerInRange,
+                                    localColorTargetPointerInRange,
                                     Plugin.Configuration.Thickness);
                                 }
                             }
@@ -457,7 +491,7 @@ internal class Rangefinder : Window , IDisposable
                                 new Vector3(potentialTarget.Position.X, data.PlayerPosition.Y, potentialTarget.Position.Z),
                                 potentialTarget.HitboxRadius,
                                 Plugin.Configuration.PointsNumber,
-                                Plugin.Configuration.ColorTargetPointerInRange,
+                                localColorTargetPointerInRange,
                                 Plugin.Configuration.Thickness);
                             }
                         }
@@ -465,6 +499,71 @@ internal class Rangefinder : Window , IDisposable
                 }
 
             }
+        }
+    }
+
+    private void InitializeTimer(float timeMS)
+    {
+        timer = new System.Timers.Timer(timeMS);
+        timer.Elapsed += TimerElapsed;
+        timer.AutoReset = false;
+        timer.Start();
+    }
+
+    private async void TimerElapsed(object sender, ElapsedEventArgs e)
+    {
+        lock (lockObject)
+        {
+            // Create a cancelation token to stop the fade out process
+            cts?.Cancel();
+            cts?.Dispose();
+            cts = new CancellationTokenSource();
+        }
+
+        var token = cts.Token;
+        try
+        {
+            await Task.Run(() => FadeOutColors(token), token);
+        }
+        catch (OperationCanceledException) { }
+    }
+
+    private void FadeOutColors(CancellationToken token)
+    {
+        float fadeOutStrength = Configuration.FadeOutSpeed;
+        for (float i = 255; i > 0; i -= fadeOutStrength)
+        {
+            token.ThrowIfCancellationRequested();
+            if (localColorActionRange.W > 0x00 / 255f) { localColorActionRange.W = (localColorActionRange.W * 255f - fadeOutStrength) / 255f; }
+            if (localColorActionRadius.W > 0x00 / 255f) { localColorActionRadius.W = (localColorActionRadius.W * 255f - fadeOutStrength) / 255f; }
+            if (localColorAutoAttack.W > 0x00 / 255f) { localColorAutoAttack.W = (localColorAutoAttack.W * 255f - fadeOutStrength) / 255f; }
+            if (localColorTargetPointerOutOfRange.W > 0x00 / 255f) { localColorTargetPointerOutOfRange.W = (localColorTargetPointerOutOfRange.W * 255f - fadeOutStrength) / 255f; }
+            if (localColorTargetPointerInRange.W > 0x00 / 255f) { localColorTargetPointerInRange.W = (localColorTargetPointerInRange.W * 255f - fadeOutStrength) / 255f; }
+            Thread.Sleep(10);
+        }
+        Plugin.Log.Information("Fade out completed");
+    }
+
+    public void ResetTimer()
+    {
+        lock (lockObject)
+        {
+            // Canceling for loop when reseting the timer to make sure that fade outs wont overlap
+            cts?.Cancel();
+            cts?.Dispose();
+            cts = null; // Need to keep null so the next timer cancelation token can be created
+        }
+
+        localColorActionRange = Configuration.ColorActionRange;
+        localColorActionRadius = Configuration.ColorActionRadius;
+        localColorAutoAttack = Configuration.ColorAutoAttack;
+        localColorTargetPointerOutOfRange = Configuration.ColorTargetPointerOutOfRange;
+        localColorTargetPointerInRange = Configuration.ColorTargetPointerInRange;
+
+        if (timer != null)
+        {
+            timer.Stop();
+            timer.Start();
         }
     }
 }

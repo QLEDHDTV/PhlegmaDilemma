@@ -1,18 +1,20 @@
 namespace PhlegmaDilemma.Hooks;
 
-using PhlegmaDilemma.Settings;
 using static ActionManager;
 using UseActionDelegate = ActionManager.Delegates.UseAction;
 
 public unsafe class UseActionHook
 {
     static readonly Hook<UseActionDelegate> _useActionHook;
-    public static uint actionIdInternal = 0;
+    private static uint actionIdInternal = 0;
+    private static uint prevActionNumber = 0;
+    private static uint actionNumber = 0;
     static unsafe UseActionHook()
     {
         _useActionHook ??= Plugin.GameInteropProvider.HookFromAddress<UseActionDelegate>(
             (nint)MemberFunctionPointers.UseAction, DetourUseAction);
     }
+
     public static void Dispose()
     {
         _useActionHook?.Dispose();
@@ -22,12 +24,18 @@ public unsafe class UseActionHook
     {
         var r = _useActionHook!.Original(self, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
         actionIdInternal = actionId;
+        actionNumber++;
         return r;
     }
 
     public static uint RetrieveActionID()
     {
         return actionIdInternal;
+    }
+
+    public static uint RetrieveActionNumber()
+    {
+        return actionNumber;
     }
 
     public static void Enable() { _useActionHook.Enable(); }

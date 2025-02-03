@@ -64,6 +64,27 @@ public class ConfigWindow : Window, IDisposable
             Configuration.Save();
         }
 
+        var fadeOutEnabler = Configuration.EnableFadeOut;
+        if (ImGui.Checkbox("Enable fade-out", ref fadeOutEnabler))
+        {
+            Configuration.EnableFadeOut = fadeOutEnabler;
+            Configuration.Save();
+        }
+
+        var fadeOutDelay = Configuration.FadeOutDelay;
+        if (ImGui.InputFloat("Fade-out delay", ref fadeOutDelay))
+        {
+            Configuration.FadeOutDelay = fadeOutDelay;
+            Configuration.Save();
+        }
+
+        var fadeOutSpeed = Configuration.FadeOutSpeed;
+        if (ImGui.InputFloat("Fade-out speed", ref fadeOutSpeed))
+        {
+            Configuration.FadeOutSpeed = fadeOutSpeed;
+            Configuration.Save();
+        }
+
         ImGui.Separator();
 
         var actionRangeColor = Configuration.ColorActionRange;

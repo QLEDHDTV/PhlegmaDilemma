@@ -68,6 +68,7 @@ public unsafe sealed class Plugin : IDalamudPlugin
 
         ConfigWindow.Dispose();
         DebugWindow.Dispose();
+        Rangefinder.Dispose();
 
         CommandManager.RemoveHandler(CommandName);
         UseActionHook.Dispose();
@@ -86,6 +87,7 @@ public unsafe sealed class Plugin : IDalamudPlugin
     public void CheckUseActionHook() => UseActionHook.Check();
     public void ToggleMainUI() => DebugWindow.Toggle();
     public void ToggleConfigUI() => ConfigWindow.Toggle();
+    public void ResetFadeout() => Rangefinder.ResetTimer();
     internal void OnFrameworkUpdate(IFramework framework) => GetData();
     internal DataDynamic RetrieveData()
     {
@@ -137,8 +139,12 @@ public unsafe sealed class Plugin : IDalamudPlugin
 
                 GameGui.ScreenToWorld(ImGui.GetMousePos(), out Vector3 worldSpace);
                 data[i].MousePosition = worldSpace;
-
-                if (UseActionHook.RetrieveActionID() != 0)
+                if (UseActionHook.RetrieveActionNumber() != data[i].ActionNumber)
+                {
+                    data[i].ActionNumber = UseActionHook.RetrieveActionNumber();
+                    ResetFadeout();
+                }
+                if (ActionManager.Instance()->GetAdjustedActionId(UseActionHook.RetrieveActionID()) != data[i].ActionID)
                 {
                     data[i].ActionID = ActionManager.Instance()->GetAdjustedActionId(UseActionHook.RetrieveActionID());
                     if (ActionSheet.TryGetRow(data[i].ActionID, out var row) == true)
