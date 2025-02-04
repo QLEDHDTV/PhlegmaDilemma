@@ -6,11 +6,11 @@ public class Configuration : IPluginConfiguration
     private IDalamudPluginInterface PluginInterface;
     public int Version { get; set; } = 0;
     public bool EnableRangefinder { get; set; } = true;
-    public bool EnableAutoAttackRange {  get; set; } = true;
+    public bool EnableAutoAttackRange {  get; set; } = false;
     public bool EnableRuler { get; set; } = false;
     public bool EnableFadeOut { get; set; } = false;
-    public float FadeOutDelay { get; set; } = 5f;
-    public float FadeOutSpeed { get; set; } = 10f;
+    public float FadeOutDelay { get; set; } = 1f;
+    public float FadeOutSpeed { get; set; } = 5f;
     public Vector4 ColorActionRange { get; set; } = new Vector4((float)0xFF / 255f, (float)0x00 / 255f, (float)0x00 / 255f, (float)0xFF / 255f);
     public Vector4 ColorActionRadius { get; set; } = new Vector4((float)0x00 / 255f, (float)0xFF / 255f, (float)0x00 / 255f, (float)0xFF / 255f);
     public Vector4 ColorAutoAttack { get; set; } = new Vector4((float)0x00 / 255f, (float)0x00 / 255f, (float)0xFF / 255f, (float)0xFF / 255f);
