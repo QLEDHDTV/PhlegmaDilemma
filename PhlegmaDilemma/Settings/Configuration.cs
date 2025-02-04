@@ -9,7 +9,7 @@ public class Configuration : IPluginConfiguration
     public bool EnableAutoAttackRange {  get; set; } = false;
     public bool EnableRuler { get; set; } = false;
     public bool EnableFadeOut { get; set; } = false;
-    public float FadeOutDelay { get; set; } = 1f;
+    public float FadeOutDelay { get; set; } = 2.5f;
     public float FadeOutSpeed { get; set; } = 5f;
     public Vector4 ColorActionRange { get; set; } = new Vector4((float)0xFF / 255f, (float)0x00 / 255f, (float)0x00 / 255f, (float)0xFF / 255f);
     public Vector4 ColorActionRadius { get; set; } = new Vector4((float)0x00 / 255f, (float)0xFF / 255f, (float)0x00 / 255f, (float)0xFF / 255f);
