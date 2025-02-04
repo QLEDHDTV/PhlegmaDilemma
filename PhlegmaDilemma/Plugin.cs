@@ -170,8 +170,8 @@ public unsafe sealed class Plugin : IDalamudPlugin
                 }
 
                 // Search for all IBattleChara and IPlayerCharacter objects within 30 yalms
-                data[i].InRangeEnemyTargets = ObjectTable.Where(obj => obj.Position.Distance2D(ClientState.LocalPlayer.Position) <= 30 && obj is IBattleNpc && obj.IsTargetable && (data[i].Target != null ? obj.EntityId != data[i].Target.EntityId : true)).ToArray();
-                var nearbyCharacters = ObjectTable.Where(obj => obj != ClientState.LocalPlayer && obj.Position.Distance2D(ClientState.LocalPlayer.Position) <= 30 && obj is IPlayerCharacter && (data[i].Target != null ? obj.EntityId != data[i].Target.EntityId : true)).ToArray();
+                data[i].InRangeEnemyTargets = ObjectTable.Where(obj => obj.Position.Distance2D(ClientState.LocalPlayer.Position) <= 30 && obj is IBattleNpc && obj.IsTargetable && !obj.IsDead &&(data[i].Target != null ? obj.EntityId != data[i].Target.EntityId : true)).ToArray();
+                var nearbyCharacters = ObjectTable.Where(obj => obj != ClientState.LocalPlayer && obj.Position.Distance2D(ClientState.LocalPlayer.Position) <= 30 && obj is IPlayerCharacter && !obj.IsDead && (data[i].Target != null ? obj.EntityId != data[i].Target.EntityId : true)).ToArray();
                 data[i].InRangeChars = nearbyCharacters.Where(obj => PartyList.Any(x => x.ObjectId == obj.EntityId)).ToArray();
             }
         }
