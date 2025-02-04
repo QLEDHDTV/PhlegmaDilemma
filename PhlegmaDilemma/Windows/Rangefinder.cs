@@ -8,6 +8,8 @@ internal class Rangefinder : Window , IDisposable
     private CancellationTokenSource cts;
     private readonly object lockObject = new();
     private bool TimerState = false;
+
+    // Use local colors to prevent fading changing original colors
     private Vector4 localColorActionRange;
     private Vector4 localColorActionRadius;
     private Vector4 localColorAutoAttack;
@@ -18,8 +20,10 @@ internal class Rangefinder : Window , IDisposable
     {
         Plugin = plugin;
         Configuration = config;
+    }
 
-        // Use local colors to prevent fading changing original colors
+    public void UpdateColors()
+    {
         localColorActionRange = Configuration.ColorActionRange;
         localColorActionRadius = Configuration.ColorActionRadius;
         localColorAutoAttack = Configuration.ColorAutoAttack;
@@ -546,7 +550,6 @@ internal class Rangefinder : Window , IDisposable
             if (localColorTargetPointerInRange.W > 0x00 / 255f) { localColorTargetPointerInRange.W = (localColorTargetPointerInRange.W * 255f - fadeOutStrength) / 255f; }
             Thread.Sleep(10);
         }
-        Plugin.Log.Information("Fade out completed");
     }
 
     public void ResetTimer()

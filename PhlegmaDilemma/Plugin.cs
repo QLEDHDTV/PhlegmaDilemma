@@ -83,6 +83,7 @@ public unsafe sealed class Plugin : IDalamudPlugin
     public void ToggleMainUI() => DebugWindow.Toggle();
     public void ToggleConfigUI() => ConfigWindow.Toggle();
     public void ResetFadeout() => Rangefinder.ResetTimer();
+    public void UpdateRangefinderColors() => Rangefinder.UpdateColors();
     internal void OnFrameworkUpdate(IFramework framework) => GetData();
     internal DataDynamic RetrieveData()
     {

@@ -4,6 +4,7 @@ namespace PhlegmaDilemma.Windows;
 
 public class ConfigWindow : Window, IDisposable
 {
+    private Plugin Plugin;
     private Configuration Configuration;
     public ConfigWindow(Plugin plugin) : base("Rangefinder Configuration###")
     {
@@ -11,8 +12,9 @@ public class ConfigWindow : Window, IDisposable
 
         Size = new Vector2(400, 600);
         SizeCondition = ImGuiCond.Always;
-
+        Plugin = plugin;
         Configuration = plugin.Configuration;
+
     }
 
     public void Dispose() { }
@@ -96,6 +98,7 @@ public class ConfigWindow : Window, IDisposable
             {
                 Configuration.ColorActionRange = actionRangeColor;
                 Configuration.Save();
+                Plugin.UpdateRangefinderColors();
             }
         }
 
@@ -106,6 +109,7 @@ public class ConfigWindow : Window, IDisposable
             {
                 Configuration.ColorActionRadius = actionRadiusColor;
                 Configuration.Save();
+                Plugin.UpdateRangefinderColors();
             }
         }
 
@@ -116,6 +120,7 @@ public class ConfigWindow : Window, IDisposable
             {
                 Configuration.ColorAutoAttack = autoAttackRangeColor;
                 Configuration.Save();
+                Plugin.UpdateRangefinderColors();
             }
         }
 
@@ -126,6 +131,7 @@ public class ConfigWindow : Window, IDisposable
             {
                 Configuration.ColorTargetPointerOutOfRange = targetOutofRangePointerColor;
                 Configuration.Save();
+                Plugin.UpdateRangefinderColors();
             }
         }
 
@@ -136,6 +142,7 @@ public class ConfigWindow : Window, IDisposable
             {
                 Configuration.ColorTargetPointerInRange = targetInRangePointerColor;
                 Configuration.Save();
+                Plugin.UpdateRangefinderColors();
             }
         }
 
