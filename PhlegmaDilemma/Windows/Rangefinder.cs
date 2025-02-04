@@ -19,6 +19,7 @@ internal class Rangefinder : Window , IDisposable
         Plugin = plugin;
         Configuration = config;
 
+        // Use local colors to prevent fading changing original colors
         localColorActionRange = Configuration.ColorActionRange;
         localColorActionRadius = Configuration.ColorActionRadius;
         localColorAutoAttack = Configuration.ColorAutoAttack;
@@ -50,7 +51,11 @@ internal class Rangefinder : Window , IDisposable
                     timer.Dispose();
                 }
                 TimerState = false;
-                localColorActionRange.W = localColorActionRadius.W = localColorAutoAttack.W = localColorTargetPointerOutOfRange.W = localColorTargetPointerInRange.W = (float)0xFF / 255f;
+                localColorActionRange.W = Configuration.ColorActionRange.W;
+                localColorActionRadius.W = Configuration.ColorActionRadius.W;
+                localColorAutoAttack.W = Configuration.ColorAutoAttack.W;
+                localColorTargetPointerOutOfRange.W = Configuration.ColorTargetPointerOutOfRange.W;
+                localColorTargetPointerInRange.W = Configuration.ColorTargetPointerInRange.W;
             }
 
             DataDynamic data = Plugin.RetrieveData();

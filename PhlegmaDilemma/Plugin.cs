@@ -1,8 +1,3 @@
-using Dalamud.Game.ClientState.Objects.Enums;
-using Dalamud.Game.ClientState.Objects.SubKinds;
-using Dalamud.Game.ClientState.Party;
-using System.Linq;
-
 namespace PhlegmaDilemma;
 
 public unsafe sealed class Plugin : IDalamudPlugin
@@ -139,7 +134,7 @@ public unsafe sealed class Plugin : IDalamudPlugin
 
                 GameGui.ScreenToWorld(ImGui.GetMousePos(), out Vector3 worldSpace);
                 data[i].MousePosition = worldSpace;
-                if (UseActionHook.RetrieveActionNumber() != data[i].ActionNumber)
+                if (UseActionHook.RetrieveActionNumber() != data[i].ActionNumber) // Used to check if hook detected action use for a fade-out
                 {
                     data[i].ActionNumber = UseActionHook.RetrieveActionNumber();
                     ResetFadeout();

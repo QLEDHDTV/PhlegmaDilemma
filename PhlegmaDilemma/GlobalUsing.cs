@@ -1,6 +1,7 @@
 global using Dalamud.Configuration;
 global using Dalamud.Game.ClientState.Objects;
 global using Dalamud.Game.ClientState.Objects.Types;
+global using Dalamud.Game.ClientState.Objects.SubKinds;
 global using Dalamud.Game.Command;
 global using Dalamud.Hooking;
 global using Dalamud.Interface.Windowing;
