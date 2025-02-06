@@ -149,21 +149,42 @@ internal class Rangefinder : Window , IDisposable
                 {
                     if (Configuration.EnableRuler == true)
                     {
-                        ImGui.GetForegroundDrawList().AddScale3D(
-                        playerHitboxEdgePoint,
-                        targetHitboxEdgePoint,
-                        data.DistanceToTarget2D,
-                        data.PlayerHitbox,
-                        1,
-                        1,
-                        localColorTargetPointerInRange,
-                        Plugin.Configuration.Thickness);
+                        if (Configuration.RulerStartPointAtPlayer)
+                        {
+                            ImGui.GetForegroundDrawList().AddScale3D(
+                            data.PlayerPosition,
+                            targetHitboxEdgePoint,
+                            data.DistanceToTarget2D,
+                            data.PlayerHitbox,
+                            1,
+                            1,
+                            localColorTargetPointerInRange,
+                            Plugin.Configuration.Thickness);
 
-                        ImGui.GetForegroundDrawList().AddLine3D(
-                        data.PlayerPosition,
-                        targetHitboxEdgePoint,
-                        localColorTargetPointerInRange,
-                        Plugin.Configuration.Thickness);
+                            ImGui.GetForegroundDrawList().AddLine3D(
+                            data.PlayerPosition,
+                            targetHitboxEdgePoint,
+                            localColorTargetPointerInRange,
+                            Plugin.Configuration.Thickness);
+                        }
+                        else
+                        {
+                            ImGui.GetForegroundDrawList().AddScale3D(
+                            playerHitboxEdgePoint,
+                            targetHitboxEdgePoint,
+                            data.DistanceToTarget2D,
+                            data.PlayerHitbox,
+                            1,
+                            1,
+                            localColorTargetPointerInRange,
+                            Plugin.Configuration.Thickness);
+
+                            ImGui.GetForegroundDrawList().AddLine3D(
+                            playerHitboxEdgePoint,
+                            targetHitboxEdgePoint,
+                            localColorTargetPointerInRange,
+                            Plugin.Configuration.Thickness);
+                        }
                     }
                     else
                     {
@@ -187,21 +208,42 @@ internal class Rangefinder : Window , IDisposable
                 {
                     if (Configuration.EnableRuler == true)
                     {
-                        ImGui.GetForegroundDrawList().AddScale3D(
-                        playerHitboxEdgePoint,
-                        targetHitboxEdgePoint,
-                        data.DistanceToTarget2D,
-                        data.PlayerHitbox,
-                        1,
-                        1,
-                        localColorTargetPointerOutOfRange,
-                        Plugin.Configuration.Thickness);
+                        if (Configuration.RulerStartPointAtPlayer)
+                        {
+                            ImGui.GetForegroundDrawList().AddScale3D(
+                            data.PlayerPosition,
+                            targetHitboxEdgePoint,
+                            data.DistanceToTarget2D,
+                            data.PlayerHitbox,
+                            1,
+                            1,
+                            localColorTargetPointerOutOfRange,
+                            Plugin.Configuration.Thickness);
 
-                        ImGui.GetForegroundDrawList().AddLine3D(
-                        data.PlayerPosition,
-                        targetHitboxEdgePoint,
-                        localColorTargetPointerOutOfRange,
-                        Plugin.Configuration.Thickness);
+                            ImGui.GetForegroundDrawList().AddLine3D(
+                            data.PlayerPosition,
+                            targetHitboxEdgePoint,
+                            localColorTargetPointerOutOfRange,
+                            Plugin.Configuration.Thickness);
+                        }
+                        else
+                        {
+                            ImGui.GetForegroundDrawList().AddScale3D(
+                            playerHitboxEdgePoint,
+                            targetHitboxEdgePoint,
+                            data.DistanceToTarget2D,
+                            data.PlayerHitbox,
+                            1,
+                            1,
+                            localColorTargetPointerOutOfRange,
+                            Plugin.Configuration.Thickness);
+
+                            ImGui.GetForegroundDrawList().AddLine3D(
+                            playerHitboxEdgePoint,
+                            targetHitboxEdgePoint,
+                            localColorTargetPointerOutOfRange,
+                            Plugin.Configuration.Thickness);
+                        }
                     }
                     else
                     {

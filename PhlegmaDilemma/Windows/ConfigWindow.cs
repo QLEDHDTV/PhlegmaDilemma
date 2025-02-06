@@ -37,13 +37,6 @@ public class ConfigWindow : Window, IDisposable
             Configuration.Save();
         }
 
-        var rulerEnabler = Configuration.EnableRuler;
-        if (ImGui.Checkbox("Enable range ruler", ref rulerEnabler))
-        {
-            Configuration.EnableRuler = rulerEnabler;
-            Configuration.Save();
-        }
-
         ImGui.Separator();
 
         var thickness = Configuration.Thickness;
@@ -65,6 +58,24 @@ public class ConfigWindow : Window, IDisposable
             }
             Configuration.Save();
         }
+
+        ImGui.Separator();
+
+        var rulerEnabler = Configuration.EnableRuler;
+        if (ImGui.Checkbox("Enable range ruler", ref rulerEnabler))
+        {
+            Configuration.EnableRuler = rulerEnabler;
+            Configuration.Save();
+        }
+
+        var rulerStartPointAtPlayer = Configuration.RulerStartPointAtPlayer;
+        if (ImGui.Checkbox("Rules start position at player position", ref rulerStartPointAtPlayer))
+        {
+            Configuration.RulerStartPointAtPlayer = rulerStartPointAtPlayer;
+            Configuration.Save();
+        }
+
+        ImGui.Separator();
 
         var fadeOutEnabler = Configuration.EnableFadeOut;
         if (ImGui.Checkbox("Enable fade-out", ref fadeOutEnabler))

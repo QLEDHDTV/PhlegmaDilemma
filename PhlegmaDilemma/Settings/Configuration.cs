@@ -8,6 +8,7 @@ public class Configuration : IPluginConfiguration
     public bool EnableRangefinder { get; set; } = true;
     public bool EnableAutoAttackRange {  get; set; } = false;
     public bool EnableRuler { get; set; } = false;
+    public bool RulerStartPointAtPlayer { get; set; } = false;
     public bool EnableFadeOut { get; set; } = false;
     public float FadeOutDelay { get; set; } = 2.5f;
     public float FadeOutSpeed { get; set; } = 5f;
