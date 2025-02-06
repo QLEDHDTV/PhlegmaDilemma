@@ -147,19 +147,6 @@ internal class Rangefinder : Window , IDisposable
             {
                 if (data.ActionRange >= data.DistanceToTarget2D || (data.ActionRange == 0 && data.ActionRadius >= data.DistanceToTarget2D))
                 {
-                    ImGui.GetForegroundDrawList().AddLine3D(
-                    actionRangeEdgePoint,
-                    targetHitboxEdgePoint,
-                    localColorTargetPointerInRange,
-                    Plugin.Configuration.Thickness);
-
-                    ImGui.GetForegroundDrawList().AddPolycircle3D(
-                    new Vector3(data.TargetPosition.X, data.PlayerPosition.Y, data.TargetPosition.Z),
-                    data.TargetHitbox,
-                    Plugin.Configuration.PointsNumber,
-                    localColorTargetPointerInRange,
-                    Plugin.Configuration.Thickness);
-
                     if (Configuration.EnableRuler == true)
                     {
                         ImGui.GetForegroundDrawList().AddScale3D(
@@ -171,24 +158,33 @@ internal class Rangefinder : Window , IDisposable
                         1,
                         localColorTargetPointerInRange,
                         Plugin.Configuration.Thickness);
-                    }
 
-                }
-                else
-                {
-                    ImGui.GetForegroundDrawList().AddLine3D(
-                    actionRangeEdgePoint,
-                    targetHitboxEdgePoint,
-                    localColorTargetPointerOutOfRange,
-                    Plugin.Configuration.Thickness);
+                        ImGui.GetForegroundDrawList().AddLine3D(
+                        data.PlayerPosition,
+                        targetHitboxEdgePoint,
+                        localColorTargetPointerInRange,
+                        Plugin.Configuration.Thickness);
+                    }
+                    else
+                    {
+                        ImGui.GetForegroundDrawList().AddLine3D(
+                        actionRangeEdgePoint,
+                        targetHitboxEdgePoint,
+                        localColorTargetPointerInRange,
+                        Plugin.Configuration.Thickness);
+
+                    }
 
                     ImGui.GetForegroundDrawList().AddPolycircle3D(
                     new Vector3(data.TargetPosition.X, data.PlayerPosition.Y, data.TargetPosition.Z),
                     data.TargetHitbox,
                     Plugin.Configuration.PointsNumber,
-                    localColorTargetPointerOutOfRange,
+                    localColorTargetPointerInRange,
                     Plugin.Configuration.Thickness);
 
+                }
+                else
+                {
                     if (Configuration.EnableRuler == true)
                     {
                         ImGui.GetForegroundDrawList().AddScale3D(
@@ -200,7 +196,27 @@ internal class Rangefinder : Window , IDisposable
                         1,
                         localColorTargetPointerOutOfRange,
                         Plugin.Configuration.Thickness);
+
+                        ImGui.GetForegroundDrawList().AddLine3D(
+                        data.PlayerPosition,
+                        targetHitboxEdgePoint,
+                        localColorTargetPointerOutOfRange,
+                        Plugin.Configuration.Thickness);
                     }
+                    else
+                    {
+                        ImGui.GetForegroundDrawList().AddLine3D(
+                        actionRangeEdgePoint,
+                        targetHitboxEdgePoint,
+                        localColorTargetPointerOutOfRange,
+                        Plugin.Configuration.Thickness);
+                    }
+                    ImGui.GetForegroundDrawList().AddPolycircle3D(
+                    new Vector3(data.TargetPosition.X, data.PlayerPosition.Y, data.TargetPosition.Z),
+                    data.TargetHitbox,
+                    Plugin.Configuration.PointsNumber,
+                    localColorTargetPointerOutOfRange,
+                    Plugin.Configuration.Thickness);
                 }
             }
 
