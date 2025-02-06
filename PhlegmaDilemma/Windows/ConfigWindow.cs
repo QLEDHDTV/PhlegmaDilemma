@@ -42,7 +42,7 @@ public class ConfigWindow : Window, IDisposable
         var thickness = Configuration.Thickness;
         if (ImGui.InputFloat("Line thickness", ref thickness))
         {
-            if (thickness <= 15)
+            if (thickness <= 15 && thickness > 0)
             {
                 Configuration.Thickness = thickness;
             }
@@ -52,7 +52,7 @@ public class ConfigWindow : Window, IDisposable
         var resolution = Configuration.PointsNumber;
         if (ImGui.InputInt("Resolution", ref resolution))
         {
-            if (resolution <= 250) 
+            if (resolution <= 250 && resolution >= 3) 
             {
                 Configuration.PointsNumber = resolution;
             }
@@ -89,15 +89,21 @@ public class ConfigWindow : Window, IDisposable
         var fadeOutDelay = Configuration.FadeOutDelay;
         if (ImGui.InputFloat("Fade-out delay", ref fadeOutDelay))
         {
-            Configuration.FadeOutDelay = fadeOutDelay;
-            Configuration.Save();
+            if (fadeOutDelay > 0)
+            {
+                Configuration.FadeOutDelay = fadeOutDelay;
+                Configuration.Save();
+            }
         }
 
         var fadeOutSpeed = Configuration.FadeOutSpeed;
         if (ImGui.InputFloat("Fade-out speed", ref fadeOutSpeed))
         {
-            Configuration.FadeOutSpeed = fadeOutSpeed;
-            Configuration.Save();
+            if (fadeOutSpeed > 0)
+            {
+                Configuration.FadeOutSpeed = fadeOutSpeed;
+                Configuration.Save();
+            }
         }
 
         ImGui.Separator();
@@ -169,15 +175,21 @@ public class ConfigWindow : Window, IDisposable
         var debugConeRadius = Configuration.DebugConeRadius;
         if (ImGui.InputFloat("Radius", ref debugConeRadius))
         {
-            Configuration.DebugConeRadius = debugConeRadius;
-            Configuration.Save();
+            if (debugConeRadius > 0)
+            {
+                Configuration.DebugConeRadius = debugConeRadius;
+                Configuration.Save();
+            }
         }
 
         var debugConeAngle = Configuration.DebugConeAngle;
         if (ImGui.InputFloat("Angle", ref debugConeAngle))
         {
-            Configuration.DebugConeAngle = debugConeAngle;
-            Configuration.Save();
+            if (debugConeAngle > 0)
+            {
+                Configuration.DebugConeAngle = debugConeAngle;
+                Configuration.Save();
+            }
         }
 
         var debugConeFollowTarget = Configuration.DebugConeFollowTarget;
