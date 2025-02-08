@@ -32,7 +32,7 @@ internal static class ImGuiExtensions
         float angleStartToEnd = (float)Math.Atan2(directionPos.X - startPos.X, directionPos.Z - startPos.Z);
         Vector2[] points = new Vector2[numPoints + 2];
         float step = (arcAngle * MathF.PI / 180) / numPoints;
-        float theta = angleStartToEnd + (Math.Abs(arcAngle - 180) / 2 * MathF.PI / 180);
+        float theta = angleStartToEnd - ((arcAngle - 180) * 0.5f * MathF.PI / 180);
         uint colorConverted = ImGuiUtils.Vec4ToUInt(color);
         Vector3 worldSpace = Vector3.Zero;
         for (int i = 0; i <= numPoints + 1; i++, theta += step)
