@@ -145,25 +145,33 @@ public unsafe sealed class Plugin : IDalamudPlugin
                     data[i].ActionID = ActionManager.Instance()->GetAdjustedActionId(UseActionHook.RetrieveActionID());
                     if (ActionSheet.TryGetRow(data[i].ActionID, out var row) == true)
                     {
-                        data[i].ActionName = row.Name.ExtractText();
-                        data[i].ActionRadius = (float)row.EffectRange;
-                        data[i].DamagingAction = row.Unknown14;                 // Unknown 14 seems to determine if the action can interact with the
-                        data[i].CanTargetEnemy = row.CanTargetHostile;          // hostiles but not necesserily by directly targeting them with an action. (damaging AoEs)
-                        data[i].CastType = row.CastType;
-                        data[i].CastWidth = row.XAxisModifier;
-                        if (data[i].CastType == 3)
+                        if (row.IsPvP == true)
                         {
-                            if (Angle90.Contains(data[i].ActionID))
+                            data[i].ActionID = 0;
+                            data[i].ActionName = "Forbidden Action! (PvP)";
+                        }
+                        else
+                        {
+                            data[i].ActionName = row.Name.ExtractText();
+                            data[i].ActionRadius = (float)row.EffectRange;
+                            data[i].DamagingAction = row.Unknown14;                 // Unknown 14 seems to determine if the action can interact with the
+                            data[i].CanTargetEnemy = row.CanTargetHostile;          // hostiles but not necesserily by directly targeting them with an action. (damaging AoEs)
+                            data[i].CastType = row.CastType;
+                            data[i].CastWidth = row.XAxisModifier;
+                            if (data[i].CastType == 3)
                             {
-                                data[i].ActionAngle = 90;
-                            }
-                            else if (Angle180.Contains(data[i].ActionID))
-                            {
-                                data[i].ActionAngle = 180;
-                            }
-                            else
-                            {
-                                data[i].ActionAngle = 120;
+                                if (Angle90.Contains(data[i].ActionID))
+                                {
+                                    data[i].ActionAngle = 90;
+                                }
+                                else if (Angle180.Contains(data[i].ActionID))
+                                {
+                                    data[i].ActionAngle = 180;
+                                }
+                                else
+                                {
+                                    data[i].ActionAngle = 120;
+                                }
                             }
                         }
                     }
