@@ -96,13 +96,13 @@ internal static class ImGuiExtensions
             Plugin.GameGui.WorldToScreen(new Vector3(startPos.X + (direction.X * i) + (width / 2) * (float)Math.Cos(angle), startPos.Y, startPos.Z + (direction.Z * i) - (width / 2) * (float)Math.Sin(angle)), out Vector2 leftPoint);
             Plugin.GameGui.WorldToScreen(new Vector3(startPos.X + (direction.X * i) - (width / 2) * (float)Math.Cos(angle), startPos.Y, startPos.Z + (direction.Z * i) + (width / 2) * (float)Math.Sin(angle)), out Vector2 rightPoint);
 
-            if (leftSide == true && i % frequency == 0)
+            if (leftSide == true && Math.Round(i, 3) % frequency == 0)
             {
-                self.AddText(ImGui.GetFont(), fontSize, leftPoint, colorConverted, i.ToString());
+                self.AddText(ImGui.GetFont(), fontSize, leftPoint, colorConverted, $"{i:0.###}");
             }
             else if (i % frequency == 0)
             {
-                self.AddText(ImGui.GetFont(), fontSize, rightPoint, colorConverted, i.ToString());
+                self.AddText(ImGui.GetFont(), fontSize, rightPoint, colorConverted, $"{i:0.###}");
             }
         }
     }
