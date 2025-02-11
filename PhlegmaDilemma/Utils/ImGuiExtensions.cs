@@ -83,8 +83,9 @@ internal static class ImGuiExtensions
         }
     }
 
-    public static void AddScaleText3D(this ImDrawListPtr self, Vector3 startPos, Vector3 endPos, float distance, Vector2 offset, int range, float width, Vector4 color, int frequency, bool side, int fontSize)
+    public static void AddScaleText3D(this ImDrawListPtr self, Vector3 startPos, Vector3 endPos, float distance, Vector2 offset, int range, float width, Vector4 color, int frequency, bool leftSide, int fontSize)
     {
+        // TODO: Properly implement offset
         uint colorConverted = ImGuiUtils.Vec4ToUInt(color);
         float angle = (float)Math.Atan2(endPos.X - startPos.X, endPos.Z - startPos.Z);
         Plugin.GameGui.WorldToScreen(startPos, out Vector2 screenSpaceStart);
@@ -92,14 +93,14 @@ internal static class ImGuiExtensions
         Vector3 direction = Vector3.Normalize(endPos - startPos);
         for (float i = 0; i < distance; i += range)
         {
-            Plugin.GameGui.WorldToScreen(new Vector3(startPos.X + (direction.X * i) + offset.X + (width / 2) * (float)Math.Cos(angle), startPos.Y, startPos.Z + (direction.Z * i) + offset.Y - (width / 2) * (float)Math.Sin(angle)), out Vector2 leftPoint);
-            Plugin.GameGui.WorldToScreen(new Vector3(startPos.X + (direction.X * i) + offset.X - (width / 2) * (float)Math.Cos(angle), startPos.Y, startPos.Z + (direction.Z * i) + offset.Y + (width / 2) * (float)Math.Sin(angle)), out Vector2 rightPoint);
+            Plugin.GameGui.WorldToScreen(new Vector3(startPos.X + (direction.X * i) + (width / 2) * (float)Math.Cos(angle), startPos.Y, startPos.Z + (direction.Z * i) - (width / 2) * (float)Math.Sin(angle)), out Vector2 leftPoint);
+            Plugin.GameGui.WorldToScreen(new Vector3(startPos.X + (direction.X * i) - (width / 2) * (float)Math.Cos(angle), startPos.Y, startPos.Z + (direction.Z * i) + offset.Y + (width / 2) * (float)Math.Sin(angle)), out Vector2 rightPoint);
 
-            if (side == true)
+            if (leftSide == true && i % frequency == 0)
             {
                 self.AddText(ImGui.GetFont(), fontSize, leftPoint, colorConverted, i.ToString());
             }
-            else
+            else if (i % frequency == 0)
             {
                 self.AddText(ImGui.GetFont(), fontSize, rightPoint, colorConverted, i.ToString());
             }

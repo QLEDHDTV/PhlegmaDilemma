@@ -91,7 +91,7 @@ public class ConfigWindow : Window, IDisposable
         }
 
         var rulerTextLeftSide = Configuration.RulerTexLefttSide;
-        if (ImGui.Checkbox("Should text be on right side?", ref rulerTextLeftSide))
+        if (ImGui.Checkbox("Should text be on the left side?", ref rulerTextLeftSide))
         {
             Configuration.RulerTexLefttSide = rulerTextLeftSide;
             Configuration.Save();
@@ -107,12 +107,13 @@ public class ConfigWindow : Window, IDisposable
             }
         }
 
-        var rulerTextOffset = Configuration.RulerTextOffset;
-        if (ImGui.InputFloat2("Text offset", ref rulerTextOffset))
-        {
-            Configuration.RulerTextOffset = rulerTextOffset;
-            Configuration.Save();
-        }
+        // TODO: Properly implement offset in ImGuiExtensions
+        //var rulerTextOffset = Configuration.RulerTextOffset;
+        //if (ImGui.InputFloat2("Text offset", ref rulerTextOffset))
+        //{
+        //    Configuration.RulerTextOffset = rulerTextOffset;
+        //    Configuration.Save();
+        //}
 
         ImGui.Separator();
 
