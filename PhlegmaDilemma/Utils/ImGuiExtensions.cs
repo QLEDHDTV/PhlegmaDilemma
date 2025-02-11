@@ -68,7 +68,7 @@ internal static class ImGuiExtensions
         self.AddLine(rightSideEnd, leftSideEnd, colorConverted, thickness);
     }
 
-    public static void AddScale3D(this ImDrawListPtr self, Vector3 startPos, Vector3 endPos, float distance, float offset, int range, float width, Vector4 color, float thickness)
+    public static void AddScale3D(this ImDrawListPtr self, Vector3 startPos, Vector3 endPos, float distance, float offset, float range, float width, Vector4 color, float thickness)
     {
         uint colorConverted = ImGuiUtils.Vec4ToUInt(color);
         float angle = (float)Math.Atan2(endPos.X - startPos.X, endPos.Z - startPos.Z);
@@ -83,7 +83,7 @@ internal static class ImGuiExtensions
         }
     }
 
-    public static void AddScaleText3D(this ImDrawListPtr self, Vector3 startPos, Vector3 endPos, float distance, float offset, Vector2 textOffset, int range, float width, Vector4 color, int frequency, bool leftSide, int fontSize)
+    public static void AddScaleText3D(this ImDrawListPtr self, Vector3 startPos, Vector3 endPos, float distance, float offset, Vector2 textOffset, float range, float width, Vector4 color, float frequency, bool leftSide, int fontSize)
     {
         // TODO: Properly implement offset
         uint colorConverted = ImGuiUtils.Vec4ToUInt(color);

@@ -97,8 +97,18 @@ public class ConfigWindow : Window, IDisposable
             Configuration.Save();
         }
 
+        var rulerRange = Configuration.RulerRange;
+        if (ImGui.InputFloat("Ruler range", ref rulerRange))
+        {
+            if (rulerRange > 0)
+            {
+                Configuration.RulerRange = rulerRange;
+                Configuration.Save();
+            }
+        }
+
         var rulerTextFrequency = Configuration.RulerTextFrequency;
-        if (ImGui.InputInt("Text frequency", ref rulerTextFrequency))
+        if (ImGui.InputFloat("Text frequency", ref rulerTextFrequency))
         {
             if (rulerTextFrequency > 0)
             {
