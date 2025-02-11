@@ -83,7 +83,7 @@ internal static class ImGuiExtensions
         }
     }
 
-    public static void AddScaleText3D(this ImDrawListPtr self, Vector3 startPos, Vector3 endPos, float distance, Vector2 offset, int range, float width, Vector4 color, int frequency, bool leftSide, int fontSize)
+    public static void AddScaleText3D(this ImDrawListPtr self, Vector3 startPos, Vector3 endPos, float distance, float offset, Vector2 textOffset, int range, float width, Vector4 color, int frequency, bool leftSide, int fontSize)
     {
         // TODO: Properly implement offset
         uint colorConverted = ImGuiUtils.Vec4ToUInt(color);
@@ -91,10 +91,10 @@ internal static class ImGuiExtensions
         Plugin.GameGui.WorldToScreen(startPos, out Vector2 screenSpaceStart);
         Plugin.GameGui.WorldToScreen(endPos, out Vector2 screenSpaceEnd);
         Vector3 direction = Vector3.Normalize(endPos - startPos);
-        for (float i = 0; i < distance; i += range)
+        for (float i = 0; i < distance - offset; i += range)
         {
             Plugin.GameGui.WorldToScreen(new Vector3(startPos.X + (direction.X * i) + (width / 2) * (float)Math.Cos(angle), startPos.Y, startPos.Z + (direction.Z * i) - (width / 2) * (float)Math.Sin(angle)), out Vector2 leftPoint);
-            Plugin.GameGui.WorldToScreen(new Vector3(startPos.X + (direction.X * i) - (width / 2) * (float)Math.Cos(angle), startPos.Y, startPos.Z + (direction.Z * i) + offset.Y + (width / 2) * (float)Math.Sin(angle)), out Vector2 rightPoint);
+            Plugin.GameGui.WorldToScreen(new Vector3(startPos.X + (direction.X * i) - (width / 2) * (float)Math.Cos(angle), startPos.Y, startPos.Z + (direction.Z * i) + (width / 2) * (float)Math.Sin(angle)), out Vector2 rightPoint);
 
             if (leftSide == true && i % frequency == 0)
             {
