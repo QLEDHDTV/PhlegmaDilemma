@@ -166,6 +166,21 @@ internal class Rangefinder : Window , IDisposable
                             targetHitboxEdgePoint,
                             localColorTargetPointerInRange,
                             Plugin.Configuration.Thickness);
+
+                            if (Configuration.EnableRulerText == true)
+                            {
+                                ImGui.GetForegroundDrawList().AddScaleText3D(
+                                data.PlayerPosition,
+                                targetHitboxEdgePoint,
+                                data.DistanceToTarget2D,
+                                Configuration.RulerTextOffset,
+                                1,
+                                1,
+                                localColorTargetPointerInRange,
+                                Configuration.RulerTextFrequency,
+                                Configuration.RulerTexLefttSide,
+                                Configuration.RulerTextSize);
+                            }
                         }
                         else
                         {
@@ -184,6 +199,21 @@ internal class Rangefinder : Window , IDisposable
                             targetHitboxEdgePoint,
                             localColorTargetPointerInRange,
                             Plugin.Configuration.Thickness);
+
+                            if (Configuration.EnableRulerText == true)
+                            {
+                                ImGui.GetForegroundDrawList().AddScaleText3D(
+                                playerHitboxEdgePoint,
+                                targetHitboxEdgePoint,
+                                data.DistanceToTarget2D,
+                                Configuration.RulerTextOffset,
+                                1,
+                                1,
+                                localColorTargetPointerInRange,
+                                Configuration.RulerTextFrequency,
+                                Configuration.RulerTexLefttSide,
+                                Configuration.RulerTextSize);
+                            }
                         }
                     }
                     else
@@ -225,6 +255,21 @@ internal class Rangefinder : Window , IDisposable
                             targetHitboxEdgePoint,
                             localColorTargetPointerOutOfRange,
                             Plugin.Configuration.Thickness);
+
+                            if (Configuration.EnableRulerText == true)
+                            {
+                                ImGui.GetForegroundDrawList().AddScaleText3D(
+                                data.PlayerPosition,
+                                targetHitboxEdgePoint,
+                                data.DistanceToTarget2D,
+                                Configuration.RulerTextOffset,
+                                1,
+                                1,
+                                localColorTargetPointerOutOfRange,
+                                Configuration.RulerTextFrequency,
+                                Configuration.RulerTexLefttSide,
+                                Configuration.RulerTextSize);
+                            }
                         }
                         else
                         {
@@ -243,6 +288,21 @@ internal class Rangefinder : Window , IDisposable
                             targetHitboxEdgePoint,
                             localColorTargetPointerOutOfRange,
                             Plugin.Configuration.Thickness);
+
+                            if (Configuration.EnableRulerText == true)
+                            {
+                                ImGui.GetForegroundDrawList().AddScaleText3D(
+                                playerHitboxEdgePoint,
+                                targetHitboxEdgePoint,
+                                data.DistanceToTarget2D,
+                                Configuration.RulerTextOffset,
+                                1,
+                                1,
+                                localColorTargetPointerOutOfRange,
+                                Configuration.RulerTextFrequency,
+                                Configuration.RulerTexLefttSide,
+                                Configuration.RulerTextSize);
+                            }
                         }
                     }
                     else

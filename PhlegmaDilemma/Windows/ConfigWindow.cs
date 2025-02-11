@@ -75,6 +75,47 @@ public class ConfigWindow : Window, IDisposable
             Configuration.Save();
         }
 
+        var enableRulerText = Configuration.EnableRulerText;
+        if (ImGui.Checkbox("Enable ruler text", ref enableRulerText))
+        {
+            Configuration.EnableRulerText = enableRulerText;
+            Configuration.Save();
+        }
+
+        var rulerTextSize = Configuration.RulerTextSize;
+        if (ImGui.InputInt("Font size", ref rulerTextSize))
+        {
+            if (rulerTextSize > 0)
+            {
+                Configuration.RulerTextSize = rulerTextSize;
+                Configuration.Save();
+            }
+        }
+
+        var rulerTextLeftSide = Configuration.RulerTexLefttSide;
+        if (ImGui.Checkbox("Should text be on right side?", ref rulerTextLeftSide))
+        {
+            Configuration.RulerTexLefttSide = rulerTextLeftSide;
+            Configuration.Save();
+        }
+
+        var rulerTextFrequency = Configuration.RulerTextFrequency;
+        if (ImGui.InputInt("Text frequency", ref rulerTextFrequency))
+        {
+            if (rulerTextFrequency > 0)
+            {
+                Configuration.RulerTextFrequency = rulerTextFrequency;
+                Configuration.Save();
+            }
+        }
+
+        var rulerTextOffset = Configuration.RulerTextOffset;
+        if (ImGui.InputFloat2("Text offset", ref rulerTextOffset))
+        {
+            Configuration.RulerTextOffset = rulerTextOffset;
+            Configuration.Save();
+        }
+
         ImGui.Separator();
 
         var fadeOutEnabler = Configuration.EnableFadeOut;

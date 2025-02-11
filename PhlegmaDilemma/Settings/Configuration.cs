@@ -9,6 +9,11 @@ public class Configuration : IPluginConfiguration
     public bool EnableAutoAttackRange {  get; set; } = false;
     public bool EnableRuler { get; set; } = false;
     public bool RulerStartPointAtPlayer { get; set; } = false;
+    public bool EnableRulerText { get; set; } = false;
+    public bool RulerTexLefttSide { get; set; } = true;
+    public int RulerTextSize { get; set; } = 20;
+    public int RulerTextFrequency { get; set; } = 1;
+    public Vector2 RulerTextOffset { get; set; } = new Vector2(0, 0);
     public bool EnableFadeOut { get; set; } = false;
     public float FadeOutDelay { get; set; } = 2.5f;
     public float FadeOutSpeed { get; set; } = 5f;
