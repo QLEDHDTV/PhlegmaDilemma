@@ -14,6 +14,7 @@ internal struct DataDynamic
     internal float PlayerAutoAttackRadius { get; set; }
     // 3.6 yalms for melee, 25.6 for ranged
     internal Vector3 MousePosition { get; set; }
+    internal uint ActionNumber { get; set; }
     internal uint ActionID { get; set; }
     internal string ActionName { get; set; }
     internal float ActionRadius { get; set; }
@@ -33,6 +34,8 @@ internal struct DataDynamic
     // The width of the straight line attacks. This is the total width, not a half.
     internal float ActionAngle { get; set; }
     // Variable to hold hardcoded cone angle.
+    internal IGameObject[] InRangeEnemyTargets { get; set; }
+    internal IGameObject[] InRangeChars { get; set; }
     internal float DistanceToTarget3D => TargetPosition != Vector3.Zero ? (PlayerPosition - TargetPosition).Length() - TargetHitbox : 0f;
     // Probably not useful? Game seems to care more about 2D distance to a target then 3D.
     internal float DistanceToTarget2D => TargetPosition != Vector3.Zero ? PlayerPosition.Distance2D(TargetPosition) - TargetHitbox : 0f;
@@ -41,4 +44,27 @@ internal struct DataDynamic
     internal float ActionRange => ActionManager.GetActionRange(ActionID) != 0 ? ActionManager.GetActionRange(ActionID) + PlayerHitbox : 0f;
     // Range calculation for actions start at the edge of the player hitbox, and not at the center.
     // Same applies for cone shaped AoEs.
+
+    public void Dispose() 
+    {
+        Target = null;
+        TargetPosition = Vector3.Zero;
+        TargetHitbox = 0f;
+        FocusTarget = null;
+        FocusTargetPosition = Vector3.Zero;
+        FocusTargetHitbox = 0f;
+        PlayerPosition = Vector3.Zero;
+        PlayerRotation = 0f;
+        PlayerHitbox = 0f;
+        PlayerAutoAttackRadius = 0f;
+        MousePosition = Vector3.Zero;
+        ActionID = 0;
+        ActionName = string.Empty;
+        ActionRadius = 0f;
+        DamagingAction = false;
+        CanTargetEnemy = false;
+        CastType = 0;
+        CastWidth = 0;
+        ActionAngle = 0f;
+    }
 }

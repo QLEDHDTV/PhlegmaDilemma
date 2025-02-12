@@ -13,6 +13,8 @@ public unsafe sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IPluginLog PluginLog { get; private set; } = null!;
     [PluginService] internal static IFramework Framework { get; private set; } = null!;
     [PluginService] internal static IDataManager DataManager { get; private set; } = null!;
+    [PluginService] internal static IObjectTable ObjectTable { get; private set; } = null!;
+    [PluginService] internal static IPartyList PartyList { get; private set; } = null!;
 
     private const string CommandName = "/pd";
 
@@ -28,6 +30,8 @@ public unsafe sealed class Plugin : IDalamudPlugin
     internal uint[] Angle90 = {106, 2870, 11403};
     internal uint[] Angle180 = {24392, 24384};
     // Hardcoded angle values for cone actions.
+
+    bool warningShown = false;
     public Plugin(IDalamudPluginInterface pluginInterface)
     {
         Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
@@ -48,7 +52,6 @@ public unsafe sealed class Plugin : IDalamudPlugin
         PluginInterface.UiBuilder.Draw += DrawUI;
         PluginInterface.UiBuilder.Draw += DrawRangefinder;
         PluginInterface.UiBuilder.OpenConfigUi += ToggleConfigUI;
-
         PluginInterface.UiBuilder.OpenMainUi += ToggleMainUI;
 
         Framework.Update += OnFrameworkUpdate;
@@ -61,6 +64,7 @@ public unsafe sealed class Plugin : IDalamudPlugin
 
         ConfigWindow.Dispose();
         DebugWindow.Dispose();
+        Rangefinder.Dispose();
 
         CommandManager.RemoveHandler(CommandName);
         UseActionHook.Dispose();
@@ -79,6 +83,8 @@ public unsafe sealed class Plugin : IDalamudPlugin
     public void CheckUseActionHook() => UseActionHook.Check();
     public void ToggleMainUI() => DebugWindow.Toggle();
     public void ToggleConfigUI() => ConfigWindow.Toggle();
+    public void ResetFadeout() => Rangefinder.ResetTimer();
+    public void UpdateRangefinderColors() => Rangefinder.UpdateColors();
     internal void OnFrameworkUpdate(IFramework framework) => GetData();
     internal DataDynamic RetrieveData()
     {
@@ -118,9 +124,9 @@ public unsafe sealed class Plugin : IDalamudPlugin
                 data[i].PlayerPosition = ClientState.LocalPlayer.Position;
                 data[i].PlayerRotation = ClientState.LocalPlayer.Rotation;
                 data[i].PlayerHitbox = ClientState.LocalPlayer.HitboxRadius;
-                if (new uint[]{5, 23, 31, 38}.Contains(ClientState.LocalPlayer.ClassJob.Value.RowId)) // Ranged auto attack range
+                if (new uint[] { 5, 23, 31, 38 }.Contains(ClientState.LocalPlayer.ClassJob.Value.RowId)) // Ranged auto attack range
                 {
-                    
+
                     data[i].PlayerAutoAttackRadius = 25.6f;
                 }
                 else
@@ -130,36 +136,57 @@ public unsafe sealed class Plugin : IDalamudPlugin
 
                 GameGui.ScreenToWorld(ImGui.GetMousePos(), out Vector3 worldSpace);
                 data[i].MousePosition = worldSpace;
-
-                if (UseActionHook.RetrieveActionID() != 0)
+                if (UseActionHook.RetrieveActionNumber() != data[i].ActionNumber) // Used to check if hook detected action use for a fade-out
+                {
+                    data[i].ActionNumber = UseActionHook.RetrieveActionNumber();
+                    ResetFadeout();
+                }
+                if (ActionManager.Instance()->GetAdjustedActionId(UseActionHook.RetrieveActionID()) != data[i].ActionID)
                 {
                     data[i].ActionID = ActionManager.Instance()->GetAdjustedActionId(UseActionHook.RetrieveActionID());
                     if (ActionSheet.TryGetRow(data[i].ActionID, out var row) == true)
                     {
-                        data[i].ActionName = row.Name.ExtractText();
-                        data[i].ActionRadius = (float)row.EffectRange;
-                        data[i].DamagingAction = row.Unknown14;                 // Unknown 14 seems to determine if the action can interact with the
-                        data[i].CanTargetEnemy = row.CanTargetHostile;          // hostiles but not necesserily by directly targeting them with an action. (damaging AoEs)
-                        data[i].CastType = row.CastType;
-                        data[i].CastWidth = row.XAxisModifier;
-                        if (data[i].CastType == 3)
+                        if (row.IsPvP == true)
                         {
-                            if (Angle90.Contains(data[i].ActionID))
+                            data[i].ActionID = 0;
+                            data[i].ActionName = "Forbidden Action! (PvP)";
+                        }
+                        else
+                        {
+                            data[i].ActionName = row.Name.ExtractText();
+                            data[i].ActionRadius = (float)row.EffectRange;
+                            data[i].DamagingAction = row.Unknown14;                 // Unknown 14 seems to determine if the action can interact with the
+                            data[i].CanTargetEnemy = row.CanTargetHostile;          // hostiles but not necesserily by directly targeting them with an action. (damaging AoEs)
+                            data[i].CastType = row.CastType;
+                            data[i].CastWidth = row.XAxisModifier;
+                            if (data[i].CastType == 3)
                             {
-                                data[i].ActionAngle = 90;
-                            }
-                            else if (Angle180.Contains(data[i].ActionID))
-                            {
-                                data[i].ActionAngle = 180;
-                            }
-                            else
-                            {
-                                data[i].ActionAngle = 120;
+                                if (Angle90.Contains(data[i].ActionID))
+                                {
+                                    data[i].ActionAngle = 90;
+                                }
+                                else if (Angle180.Contains(data[i].ActionID))
+                                {
+                                    data[i].ActionAngle = 180;
+                                }
+                                else
+                                {
+                                    data[i].ActionAngle = 120;
+                                }
                             }
                         }
                     }
                 }
+
+                // Search for all IBattleChara and IPlayerCharacter objects within 30 yalms
+                data[i].InRangeEnemyTargets = ObjectTable.Where(obj => obj.Position.Distance2D(ClientState.LocalPlayer.Position) <= 30 && obj is IBattleNpc && obj.IsTargetable && !obj.IsDead &&(data[i].Target != null ? obj.EntityId != data[i].Target.EntityId : true)).ToArray();
+                var nearbyCharacters = ObjectTable.Where(obj => obj != ClientState.LocalPlayer && obj.Position.Distance2D(ClientState.LocalPlayer.Position) <= 30 && obj is IPlayerCharacter && !obj.IsDead && (data[i].Target != null ? obj.EntityId != data[i].Target.EntityId : true)).ToArray();
+                data[i].InRangeChars = nearbyCharacters.Where(obj => PartyList.Any(x => x.ObjectId == obj.EntityId)).ToArray();
             }
+        }
+        else
+        {
+            data[0].Dispose();
         }
     }
 }
