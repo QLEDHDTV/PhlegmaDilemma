@@ -30,7 +30,7 @@ public class Configuration : IPluginConfiguration
     public float DebugConeRadius { get; set; } = 5f;
     public float DebugConeAngle { get; set; } = 90f;
     public bool DebugConeFollowTarget { get; set; } = false;
-    public bool WarningShown { get; set; } = false;
+    public bool ShowWarning { get; set; } = true;
     public void Save()
     {
         Plugin.PluginInterface.SavePluginConfig(this);

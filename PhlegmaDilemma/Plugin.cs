@@ -30,6 +30,8 @@ public unsafe sealed class Plugin : IDalamudPlugin
     internal uint[] Angle90 = {106, 2870, 11403};
     internal uint[] Angle180 = {24392, 24384};
     // Hardcoded angle values for cone actions.
+
+    bool warningShown = false;
     public Plugin(IDalamudPluginInterface pluginInterface)
     {
         Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
@@ -50,7 +52,6 @@ public unsafe sealed class Plugin : IDalamudPlugin
         PluginInterface.UiBuilder.Draw += DrawUI;
         PluginInterface.UiBuilder.Draw += DrawRangefinder;
         PluginInterface.UiBuilder.OpenConfigUi += ToggleConfigUI;
-
         PluginInterface.UiBuilder.OpenMainUi += ToggleMainUI;
 
         Framework.Update += OnFrameworkUpdate;

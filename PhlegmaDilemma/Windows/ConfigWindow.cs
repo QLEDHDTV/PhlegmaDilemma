@@ -13,6 +13,10 @@ public class ConfigWindow : Window, IDisposable
         Plugin = plugin;
         Configuration = plugin.Configuration;
 
+        SizeConstraints = new WindowSizeConstraints
+        {
+            MinimumSize = new Vector2(450, 700)
+        };
     }
 
     public void Dispose() { }
@@ -21,6 +25,28 @@ public class ConfigWindow : Window, IDisposable
 
     public override void Draw()
     {
+        if (Configuration.ShowWarning == true)
+        {
+            ImGui.SetWindowFontScale(2f);
+            ImGui.TextColored(new Vector4(1, 0, 0, 1), "WARNING");
+            ImGui.SetWindowFontScale(1f);
+            ImGui.Separator();
+            ImGui.TextUnformatted(
+                "Currently, Phlegma Dilemma does not accurately show cone actions arc.\n" +
+                "This is due to Dalamud not having any way to get the arc angle values\n" +
+                "for cone actions.\n\n" +
+                "If you want to help the author, you can use debug cone in settings\n" +
+                "to find angle value for a specific action and send it along with ID\n" +
+                "to the github issues page.");
+            ImGui.Spacing();
+            if (ImGui.Button("I understand"))
+            {
+                Configuration.ShowWarning = false;
+                Configuration.Save();
+            }
+            ImGui.Separator();
+        }
+
         var rangefinderEnabler = Configuration.EnableRangefinder;
         if (ImGui.Checkbox("Enable rangefinder", ref rangefinderEnabler))
         {
