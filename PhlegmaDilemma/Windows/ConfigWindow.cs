@@ -93,7 +93,7 @@ public class ConfigWindow : Window, IDisposable
         }
 
         var rulerStartPointAtPlayer = Configuration.RulerStartPointAtPlayer;
-        if (ImGui.Checkbox("Rules start position at player position", ref rulerStartPointAtPlayer))
+        if (ImGui.Checkbox("Ruler start position at player position", ref rulerStartPointAtPlayer))
         {
             Configuration.RulerStartPointAtPlayer = rulerStartPointAtPlayer;
             Configuration.Save();
