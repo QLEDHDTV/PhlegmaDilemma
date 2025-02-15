@@ -665,11 +665,20 @@ internal class Rangefinder : Window , IDisposable
         for (float i = 255; i > 0; i -= fadeOutStrength)
         {
             token.ThrowIfCancellationRequested();
-            if (localColorActionRange.W > 0x00 / 255f) { localColorActionRange.W = (localColorActionRange.W * 255f - fadeOutStrength) / 255f; }
-            if (localColorActionRadius.W > 0x00 / 255f) { localColorActionRadius.W = (localColorActionRadius.W * 255f - fadeOutStrength) / 255f; }
-            if (localColorAutoAttack.W > 0x00 / 255f) { localColorAutoAttack.W = (localColorAutoAttack.W * 255f - fadeOutStrength) / 255f; }
-            if (localColorTargetPointerOutOfRange.W > 0x00 / 255f) { localColorTargetPointerOutOfRange.W = (localColorTargetPointerOutOfRange.W * 255f - fadeOutStrength) / 255f; }
-            if (localColorTargetPointerInRange.W > 0x00 / 255f) { localColorTargetPointerInRange.W = (localColorTargetPointerInRange.W * 255f - fadeOutStrength) / 255f; }
+            float alphaCARange = Math.Clamp((localColorActionRange.W * 255f - fadeOutStrength) / 255f, 0x00 / 255f, 0xFF / 255f);
+            localColorActionRange.W = alphaCARange;
+
+            float alphaCARadius = Math.Clamp((localColorActionRadius.W * 255f - fadeOutStrength) / 255f, 0x00 / 255f, 0xFF / 255f);
+            localColorActionRadius.W = alphaCARadius;
+
+            float alphaCAA = Math.Clamp((localColorAutoAttack.W * 255f - fadeOutStrength) / 255f, 0x00 / 255f, 0xFF / 255f);
+            localColorAutoAttack.W = alphaCAA;
+
+            float alphaCTPOOR = Math.Clamp((localColorTargetPointerOutOfRange.W * 255f - fadeOutStrength) / 255f, 0x00 / 255f, 0xFF / 255f);
+            localColorTargetPointerOutOfRange.W = alphaCTPOOR;
+
+            float alphaCTPIR = Math.Clamp((localColorTargetPointerInRange.W * 255f - fadeOutStrength) / 255f, 0x00 / 255f, 0xFF / 255f);
+            localColorTargetPointerInRange.W = alphaCTPIR;
             Thread.Sleep(10);
         }
     }
