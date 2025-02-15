@@ -93,7 +93,7 @@ public class ConfigWindow : Window, IDisposable
         }
 
         var rulerStartPointAtPlayer = Configuration.RulerStartPointAtPlayer;
-        if (ImGui.Checkbox("Rules start position at player position", ref rulerStartPointAtPlayer))
+        if (ImGui.Checkbox("Ruler start position at player position", ref rulerStartPointAtPlayer))
         {
             Configuration.RulerStartPointAtPlayer = rulerStartPointAtPlayer;
             Configuration.Save();
@@ -175,7 +175,7 @@ public class ConfigWindow : Window, IDisposable
         var fadeOutSpeed = Configuration.FadeOutSpeed;
         if (ImGui.InputFloat("Fade-out speed", ref fadeOutSpeed))
         {
-            if (fadeOutSpeed > 0)
+            if (fadeOutSpeed > 0 && fadeOutSpeed <= 255)
             {
                 Configuration.FadeOutSpeed = fadeOutSpeed;
                 Configuration.Save();
