@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Dalamud.NET.SDK/11.0.0">
+<Project Sdk="Dalamud.NET.SDK/12.0.2">
   <PropertyGroup>
-    <Version>0.2.1.0</Version>
+    <Version>0.2.1.1</Version>
     <Description></Description>
     <PackageProjectUrl></PackageProjectUrl>
     <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
