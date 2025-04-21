@@ -30,6 +30,8 @@ public unsafe sealed class Plugin : IDalamudPlugin
     internal uint[] Angle90 = {106, 2870, 11403};
     internal uint[] Angle180 = {24392, 24384};
     // Hardcoded angle values for cone actions.
+    internal uint[] ForbiddenTerritories = {149, 250, 376, 431, 502, 506, 554, 589, 590, 591, 701, 729, 791, 888, 1032, 1033, 1034, 1058, 1059, 1060, 1116, 1117, 1138, 1139};
+    // PvP zones IDs.
 
     bool warningShown = false;
     public Plugin(IDalamudPluginInterface pluginInterface)
@@ -92,7 +94,7 @@ public unsafe sealed class Plugin : IDalamudPlugin
     }
     internal void GetData()
     {
-        if (ClientState.LocalPlayer != null)
+        if (ClientState.LocalPlayer != null & !ForbiddenTerritories.Contains(ClientState.TerritoryType))
         {
             for (int i = 0; i < data.Length; i++)
             {
@@ -178,7 +180,7 @@ public unsafe sealed class Plugin : IDalamudPlugin
                     }
                 }
 
-                // Search for all IBattleChara and IPlayerCharacter objects within 30 yalms
+                // Search for all IBattleChara and party IPlayerCharacter objects within 30 yalms
                 data[i].InRangeEnemyTargets = ObjectTable.Where(obj => obj.Position.Distance2D(ClientState.LocalPlayer.Position) <= 30 && obj is IBattleNpc && obj.IsTargetable && !obj.IsDead &&(data[i].Target != null ? obj.EntityId != data[i].Target.EntityId : true)).ToArray();
                 var nearbyCharacters = ObjectTable.Where(obj => obj != ClientState.LocalPlayer && obj.Position.Distance2D(ClientState.LocalPlayer.Position) <= 30 && obj is IPlayerCharacter && !obj.IsDead && (data[i].Target != null ? obj.EntityId != data[i].Target.EntityId : true)).ToArray();
                 data[i].InRangeChars = nearbyCharacters.Where(obj => PartyList.Any(x => x.ObjectId == obj.EntityId)).ToArray();

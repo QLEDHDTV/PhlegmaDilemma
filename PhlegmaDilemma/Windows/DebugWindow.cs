@@ -51,6 +51,6 @@ public class DebugWindow : Window, IDisposable
             $"Cast Type: {data.CastType}\n" +
             $"Angle: {data.ActionAngle}\n" +
             $"Cast Width: {data.CastWidth}\n\n" +
-            $"Party: {String.Join(", ", data.InRangeChars.Select(x => x.EntityId).ToArray())}\n");
+            $"Party: {String.Join(", ", data.InRangeChars.Select(x => x.Name.TextValue).ToArray())}\n");
     }
 }
