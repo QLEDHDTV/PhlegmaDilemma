@@ -39,6 +39,7 @@ internal class Rangefinder : Window , IDisposable
         }
     }
 
+    // TODO: Implement drawing rangefinder only when weapon is unsheathed
     public override void Draw()
     {
         if (Configuration.EnableRangefinder == true)

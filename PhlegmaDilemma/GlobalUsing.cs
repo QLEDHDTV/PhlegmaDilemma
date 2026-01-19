@@ -9,7 +9,7 @@ global using Dalamud.IoC;
 global using Dalamud.Plugin;
 global using Dalamud.Plugin.Services;
 global using FFXIVClientStructs.FFXIV.Client.Game;
-global using ImGuiNET;
+global using Dalamud.Bindings.ImGui;
 global using Lumina.Excel;
 global using PhlegmaDilemma.Hooks;
 global using PhlegmaDilemma.Settings;
