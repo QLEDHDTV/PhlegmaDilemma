@@ -180,7 +180,7 @@ internal class Rangefinder : Window , IDisposable
                                 1,
                                 localColorTargetPointerInRange,
                                 Configuration.RulerTextFrequency,
-                                Configuration.RulerTexLefttSide,
+                                Configuration.RulerTexLeftSide,
                                 Configuration.RulerTextSize);
                             }
                         }
@@ -214,7 +214,7 @@ internal class Rangefinder : Window , IDisposable
                                 1,
                                 localColorTargetPointerInRange,
                                 Configuration.RulerTextFrequency,
-                                Configuration.RulerTexLefttSide,
+                                Configuration.RulerTexLeftSide,
                                 Configuration.RulerTextSize);
                             }
                         }
@@ -271,7 +271,7 @@ internal class Rangefinder : Window , IDisposable
                                 1,
                                 localColorTargetPointerOutOfRange,
                                 Configuration.RulerTextFrequency,
-                                Configuration.RulerTexLefttSide,
+                                Configuration.RulerTexLeftSide,
                                 Configuration.RulerTextSize);
                             }
                         }
@@ -305,7 +305,7 @@ internal class Rangefinder : Window , IDisposable
                                 1,
                                 localColorTargetPointerOutOfRange,
                                 Configuration.RulerTextFrequency,
-                                Configuration.RulerTexLefttSide,
+                                Configuration.RulerTexLeftSide,
                                 Configuration.RulerTextSize);
                             }
                         }
@@ -515,8 +515,8 @@ internal class Rangefinder : Window , IDisposable
                             {
                                 float rightSide = 0;
                                 float leftSide = 0;
-                                Vector3 shortestFromPotToEdgeRight = Vector3Exstensions.ShortestLine2D(data.PlayerPosition, actionEdgeLineRight, potentialTarget.Position, out shortestFromPotToEdgeRight, out rightSide);
-                                Vector3 shortestFromPotToEdgeLeft = Vector3Exstensions.ShortestLine2D(data.PlayerPosition, actionEdgeLineLeft, potentialTarget.Position, out shortestFromPotToEdgeLeft, out leftSide);
+                                Vector3 shortestFromPotToEdgeRight = Vector3Extensions.ShortestLine2D(data.PlayerPosition, actionEdgeLineRight, potentialTarget.Position, out shortestFromPotToEdgeRight, out rightSide);
+                                Vector3 shortestFromPotToEdgeLeft = Vector3Extensions.ShortestLine2D(data.PlayerPosition, actionEdgeLineLeft, potentialTarget.Position, out shortestFromPotToEdgeLeft, out leftSide);
 
                                 if ((rightSide <= 0 && leftSide >= 0) || shortestFromPotToEdgeLeft.Distance2D(potentialTarget.Position) <= potentialTarget.HitboxRadius
                                  || shortestFromPotToEdgeRight.Distance2D(potentialTarget.Position) <= potentialTarget.HitboxRadius)
@@ -539,8 +539,8 @@ internal class Rangefinder : Window , IDisposable
                             {
                                 float rightSide = 0;
                                 float leftSide = 0;
-                                Vector3 shortestFromPotToEdgeRight = Vector3Exstensions.ShortestLine2D(data.PlayerPosition, actionEdgeLineRight, potentialTarget.Position, out shortestFromPotToEdgeRight, out rightSide);
-                                Vector3 shortestFromPotToEdgeLeft = Vector3Exstensions.ShortestLine2D(data.PlayerPosition, actionEdgeLineLeft, potentialTarget.Position, out shortestFromPotToEdgeLeft, out leftSide);
+                                Vector3 shortestFromPotToEdgeRight = Vector3Extensions.ShortestLine2D(data.PlayerPosition, actionEdgeLineRight, potentialTarget.Position, out shortestFromPotToEdgeRight, out rightSide);
+                                Vector3 shortestFromPotToEdgeLeft = Vector3Extensions.ShortestLine2D(data.PlayerPosition, actionEdgeLineLeft, potentialTarget.Position, out shortestFromPotToEdgeLeft, out leftSide);
 
                                 // Comparison is swapped due to the reversed angle calculation (TODO in actionConeEdge)
                                 if ((rightSide >= 0 && leftSide <= 0) 
@@ -566,9 +566,9 @@ internal class Rangefinder : Window , IDisposable
                                 float leftSide = 0;
                                 float rightSide = 0;
                                 float centerSide = 0;
-                                Vector3 shortestFromPotToEdgeRight = Vector3Exstensions.ShortestLine2D(actionEdgeLineRight, actionRadiusEdgeLineRight, potentialTarget.Position, out shortestFromPotToEdgeRight, out rightSide);
-                                Vector3 shortestFromPotToEdgeLeft = Vector3Exstensions.ShortestLine2D(actionEdgeLineLeft, actionRadiusEdgeLineLeft, potentialTarget.Position, out shortestFromPotToEdgeLeft, out leftSide);
-                                Vector3 shortestFromLeftToRightEdge = Vector3Exstensions.ShortestLine2D(actionEdgeLineLeft, actionEdgeLineRight, potentialTarget.Position, out shortestFromLeftToRightEdge, out centerSide);
+                                Vector3 shortestFromPotToEdgeRight = Vector3Extensions.ShortestLine2D(actionEdgeLineRight, actionRadiusEdgeLineRight, potentialTarget.Position, out shortestFromPotToEdgeRight, out rightSide);
+                                Vector3 shortestFromPotToEdgeLeft = Vector3Extensions.ShortestLine2D(actionEdgeLineLeft, actionRadiusEdgeLineLeft, potentialTarget.Position, out shortestFromPotToEdgeLeft, out leftSide);
+                                Vector3 shortestFromLeftToRightEdge = Vector3Extensions.ShortestLine2D(actionEdgeLineLeft, actionEdgeLineRight, potentialTarget.Position, out shortestFromLeftToRightEdge, out centerSide);
                                 // ShotestFromLeftToRightEdge is used to fix the edge case where the target is in between the lines but outside of the square (behind)
 
                                 if ((rightSide <= 0 && leftSide >= 0 && centerSide <= 0) 
@@ -655,12 +655,12 @@ internal class Rangefinder : Window , IDisposable
         var token = cts.Token;
         try
         {
-            await Task.Run(() => FadeOutColors(token), token);
+            await FadeOutColors(token);
         }
         catch (OperationCanceledException) { }
     }
 
-    private void FadeOutColors(CancellationToken token)
+    private async Task FadeOutColors(CancellationToken token)
     {
         float fadeOutStrength = Configuration.FadeOutSpeed;
         for (float i = 255; i > 0; i -= fadeOutStrength)
@@ -680,7 +680,7 @@ internal class Rangefinder : Window , IDisposable
 
             float alphaCTPIR = Math.Clamp((localColorTargetPointerInRange.W * 255f - fadeOutStrength) / 255f, 0x00 / 255f, 0xFF / 255f);
             localColorTargetPointerInRange.W = alphaCTPIR;
-            Thread.Sleep(10);
+            await Task.Delay(10, token);
         }
     }
 

@@ -12,7 +12,7 @@ public class Configuration : IPluginConfiguration
     public float RulerRange { get; set; } = 1;
     public float RulerTextFrequency { get; set; } = 1;
     public bool EnableRulerText { get; set; } = false;
-    public bool RulerTexLefttSide { get; set; } = true;
+    public bool RulerTexLeftSide { get; set; } = true;
     public int RulerTextSize { get; set; } = 20;
     public Vector2 RulerTextOffset { get; set; } = new Vector2(0, 0);
     public bool EnableFadeOut { get; set; } = false;

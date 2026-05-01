@@ -45,7 +45,7 @@ public class DebugWindow : Window, IDisposable
             $"ActionID: {data.ActionID} ({data.ActionName})\n" +
             $"Range: {data.ActionRange}\n" +
             $"Radius: {data.ActionRadius}\n" +
-            $"FT Edge, Player, T Edge Angle: {MathF.Abs((180 / MathF.PI) * Vector3Exstensions.Angle3Points(focusActionRangeEdgePoint, data.PlayerPosition, actionRangeEdgePoint) - 180)}\n" +
+            $"FT Edge, Player, T Edge Angle: {MathF.Abs((180 / MathF.PI) * Vector3Extensions.Angle3Points(focusActionRangeEdgePoint, data.PlayerPosition, actionRangeEdgePoint) - 180)}\n" +
             $"Damaging Action: {data.DamagingAction}\n" +
             $"Can target enemy: {data.CanTargetEnemy}\n" +
             $"Cast Type: {data.CastType}\n" +

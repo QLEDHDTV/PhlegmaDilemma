@@ -7,8 +7,7 @@ public unsafe class UseActionHook
 {
     static readonly Hook<UseActionDelegate> _useActionHook;
     private static uint actionIdInternal = 0;
-    private static uint prevActionNumber = 0;
-    private static uint actionNumber = 0;
+    private static volatile uint actionUseCounter = 0;
     static unsafe UseActionHook()
     {
         _useActionHook ??= Plugin.GameInteropProvider.HookFromAddress<UseActionDelegate>(
@@ -24,7 +23,7 @@ public unsafe class UseActionHook
     {
         var r = _useActionHook!.Original(self, actionType, actionId, targetId, extraParam, mode, comboRouteId, outOptAreaTargeted);
         actionIdInternal = actionId;
-        actionNumber++;
+        Interlocked.Increment(ref actionUseCounter);
         return r;
     }
 
@@ -33,9 +32,9 @@ public unsafe class UseActionHook
         return actionIdInternal;
     }
 
-    public static uint RetrieveActionNumber()
+    public static uint RetrieveActionUseCounter()
     {
-        return actionNumber;
+        return actionUseCounter;
     }
 
     public static void Enable() { _useActionHook.Enable(); }
