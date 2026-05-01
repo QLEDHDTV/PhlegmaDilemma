@@ -116,10 +116,10 @@ public class ConfigWindow : Window, IDisposable
             }
         }
 
-        var rulerTextLeftSide = Configuration.RulerTexLefttSide;
+        var rulerTextLeftSide = Configuration.RulerTexLeftSide;
         if (ImGui.Checkbox("Should text be on the left side?", ref rulerTextLeftSide))
         {
-            Configuration.RulerTexLefttSide = rulerTextLeftSide;
+            Configuration.RulerTexLeftSide = rulerTextLeftSide;
             Configuration.Save();
         }
 

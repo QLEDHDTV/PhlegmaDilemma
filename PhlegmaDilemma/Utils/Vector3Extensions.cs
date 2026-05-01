@@ -1,5 +1,5 @@
 namespace PhlegmaDilemma.Utils;
-internal static class Vector3Exstensions
+internal static class Vector3Extensions
 {
     internal static float Distance2D(this Vector3 value1, Vector3 value2)
     {

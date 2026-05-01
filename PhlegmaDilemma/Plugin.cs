@@ -5,10 +5,10 @@ public unsafe sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
     [PluginService] internal static ITextureProvider TextureProvider { get; private set; } = null!;
     [PluginService] internal static ICommandManager CommandManager { get; private set; } = null!;
-    [PluginService] internal static IPluginLog Log { get; private set; } = null!;
     [PluginService] internal static IGameGui GameGui { get; private set; } = null!;
     [PluginService] internal static ITargetManager TargetManager { get; private set; } = null!;
     [PluginService] internal static IClientState ClientState { get; private set; } = null!;
+
     [PluginService] internal static IGameInteropProvider GameInteropProvider { get; private set; } = null!;
     [PluginService] internal static IPluginLog PluginLog { get; private set; } = null!;
     [PluginService] internal static IFramework Framework { get; private set; } = null!;
@@ -24,7 +24,7 @@ public unsafe sealed class Plugin : IDalamudPlugin
     private ConfigWindow ConfigWindow { get; init; }
     private DebugWindow DebugWindow { get; init; }
     private Rangefinder Rangefinder { get; init; }
-    internal DataDynamic[] data = new DataDynamic[1];
+    internal DataDynamic Data = new();
     internal ExcelSheet<Lumina.Excel.Sheets.Action> ActionSheet = DataManager.GetExcelSheet<Lumina.Excel.Sheets.Action>();
     
     internal uint[] Angle90 = {106, 2870, 11403};
@@ -88,107 +88,119 @@ public unsafe sealed class Plugin : IDalamudPlugin
     public void ResetFadeout() => Rangefinder.ResetTimer();
     public void UpdateRangefinderColors() => Rangefinder.UpdateColors();
     internal void OnFrameworkUpdate(IFramework framework) => GetData();
-    internal DataDynamic RetrieveData()
-    {
-        return data[0];
-    }
+    internal DataDynamic RetrieveData() => Data;
     internal void GetData()
     {
-        if (ClientState.LocalPlayer != null & !ForbiddenTerritories.Contains(ClientState.TerritoryType))
+        if (ObjectTable.LocalPlayer != null && !ForbiddenTerritories.Contains(ClientState.TerritoryType))
         {
-            for (int i = 0; i < data.Length; i++)
+            if (TargetManager.Target != null)
             {
-                if (TargetManager.Target != null)
-                {
-                    data[i].Target = TargetManager.Target;
-                    data[i].TargetPosition = TargetManager.Target.Position;
-                    data[i].TargetHitbox = TargetManager.Target.HitboxRadius;
-                }
-                else
-                {
-                    data[i].Target = null;
-                    data[i].TargetPosition = Vector3.Zero;
-                    data[i].TargetHitbox = 0;
-                }
+                Data.Target = TargetManager.Target;
+                Data.TargetPosition = TargetManager.Target.Position;
+                Data.TargetHitbox = TargetManager.Target.HitboxRadius;
+            }
+            else
+            {
+                Data.Target = null;
+                Data.TargetPosition = Vector3.Zero;
+                Data.TargetHitbox = 0;
+            }
 
-                if (TargetManager.FocusTarget != null)
-                {
-                    data[i].FocusTarget = TargetManager.FocusTarget;
-                    data[i].FocusTargetPosition = TargetManager.FocusTarget.Position;
-                    data[i].FocusTargetHitbox = TargetManager.FocusTarget.HitboxRadius;
-                }
-                else
-                {
-                    data[i].FocusTarget = null;
-                    data[i].FocusTargetPosition = Vector3.Zero;
-                    data[i].FocusTargetHitbox = 0;
-                }
-                data[i].PlayerPosition = ClientState.LocalPlayer.Position;
-                data[i].PlayerRotation = ClientState.LocalPlayer.Rotation;
-                data[i].PlayerHitbox = ClientState.LocalPlayer.HitboxRadius;
-                if (new uint[] { 5, 23, 31, 38 }.Contains(ClientState.LocalPlayer.ClassJob.Value.RowId)) // Ranged auto attack range
-                {
+            if (TargetManager.FocusTarget != null)
+            {
+                Data.FocusTarget = TargetManager.FocusTarget;
+                Data.FocusTargetPosition = TargetManager.FocusTarget.Position;
+                Data.FocusTargetHitbox = TargetManager.FocusTarget.HitboxRadius;
+            }
+            else
+            {
+                Data.FocusTarget = null;
+                Data.FocusTargetPosition = Vector3.Zero;
+                Data.FocusTargetHitbox = 0;
+            }
+            Data.PlayerPosition = ObjectTable.LocalPlayer.Position;
+            Data.PlayerRotation = ObjectTable.LocalPlayer.Rotation;
+            Data.PlayerHitbox = ObjectTable.LocalPlayer.HitboxRadius;
+            if (new uint[] { 5, 23, 31, 38 }.Contains(ObjectTable.LocalPlayer.ClassJob.Value.RowId)) // Ranged auto attack range
+            {
 
-                    data[i].PlayerAutoAttackRadius = 25.6f;
-                }
-                else
-                {
-                    data[i].PlayerAutoAttackRadius = 3.6f;
-                }
+                Data.PlayerAutoAttackRadius = 25.6f;
+            }
+            else
+            {
+                Data.PlayerAutoAttackRadius = 3.6f;
+            }
 
-                GameGui.ScreenToWorld(ImGui.GetMousePos(), out Vector3 worldSpace);
-                data[i].MousePosition = worldSpace;
-                if (UseActionHook.RetrieveActionNumber() != data[i].ActionNumber) // Used to check if hook detected action use for a fade-out
+            GameGui.ScreenToWorld(ImGui.GetMousePos(), out Vector3 worldSpace);
+            Data.MousePosition = worldSpace;
+            if (UseActionHook.RetrieveActionUseCounter() != Data.ActionNumber) // Used to check if hook detected action use for a fade-out
+            {
+                Data.ActionNumber = UseActionHook.RetrieveActionUseCounter();
+                ResetFadeout();
+            }
+            if (ActionManager.Instance()->GetAdjustedActionId(UseActionHook.RetrieveActionID()) != Data.ActionID)
+            {
+                Data.ActionID = ActionManager.Instance()->GetAdjustedActionId(UseActionHook.RetrieveActionID());
+                if (ActionSheet.TryGetRow(Data.ActionID, out var row) == true)
                 {
-                    data[i].ActionNumber = UseActionHook.RetrieveActionNumber();
-                    ResetFadeout();
-                }
-                if (ActionManager.Instance()->GetAdjustedActionId(UseActionHook.RetrieveActionID()) != data[i].ActionID)
-                {
-                    data[i].ActionID = ActionManager.Instance()->GetAdjustedActionId(UseActionHook.RetrieveActionID());
-                    if (ActionSheet.TryGetRow(data[i].ActionID, out var row) == true)
+                    if (row.IsPvP == true)
                     {
-                        if (row.IsPvP == true)
+                        Data.ActionID = 0;
+                        Data.ActionName = "Forbidden Action! (PvP)";
+                    }
+                    else
+                    {
+                        Data.ActionName = row.Name.ExtractText();
+                        Data.ActionRadius = (float)row.EffectRange;
+                        Data.DamagingAction = row.Unknown14;                 // Unknown 14 seems to determine if the action can interact with the
+                        Data.CanTargetEnemy = row.CanTargetHostile;          // hostiles but not necesserily by directly targeting them with an action. (damaging AoEs)
+                        Data.CastType = row.CastType;
+                        Data.CastWidth = row.XAxisModifier;
+                        if (Data.CastType == 3)
                         {
-                            data[i].ActionID = 0;
-                            data[i].ActionName = "Forbidden Action! (PvP)";
-                        }
-                        else
-                        {
-                            data[i].ActionName = row.Name.ExtractText();
-                            data[i].ActionRadius = (float)row.EffectRange;
-                            data[i].DamagingAction = row.Unknown14;                 // Unknown 14 seems to determine if the action can interact with the
-                            data[i].CanTargetEnemy = row.CanTargetHostile;          // hostiles but not necesserily by directly targeting them with an action. (damaging AoEs)
-                            data[i].CastType = row.CastType;
-                            data[i].CastWidth = row.XAxisModifier;
-                            if (data[i].CastType == 3)
+                            if (Angle90.Contains(Data.ActionID))
                             {
-                                if (Angle90.Contains(data[i].ActionID))
-                                {
-                                    data[i].ActionAngle = 90;
-                                }
-                                else if (Angle180.Contains(data[i].ActionID))
-                                {
-                                    data[i].ActionAngle = 180;
-                                }
-                                else
-                                {
-                                    data[i].ActionAngle = 120;
-                                }
+                                Data.ActionAngle = 90;
+                            }
+                            else if (Angle180.Contains(Data.ActionID))
+                            {
+                                Data.ActionAngle = 180;
+                            }
+                            else
+                            {
+                                Data.ActionAngle = 120;
                             }
                         }
                     }
                 }
-
-                // Search for all IBattleChara and party IPlayerCharacter objects within 30 yalms
-                data[i].InRangeEnemyTargets = ObjectTable.Where(obj => obj.Position.Distance2D(ClientState.LocalPlayer.Position) <= 30 && obj is IBattleNpc && obj.IsTargetable && !obj.IsDead &&(data[i].Target != null ? obj.EntityId != data[i].Target.EntityId : true)).ToArray();
-                var nearbyCharacters = ObjectTable.Where(obj => obj != ClientState.LocalPlayer && obj.Position.Distance2D(ClientState.LocalPlayer.Position) <= 30 && obj is IPlayerCharacter && !obj.IsDead && (data[i].Target != null ? obj.EntityId != data[i].Target.EntityId : true)).ToArray();
-                data[i].InRangeChars = nearbyCharacters.Where(obj => PartyList.Any(x => x.ObjectId == obj.EntityId)).ToArray();
             }
+
+            // Search for all IBattleChara and party IPlayerCharacter objects within 30 yalms
+            Data.InRangeEnemyTargets = ObjectTable.Where(obj => obj.Position.Distance2D(ObjectTable.LocalPlayer.Position) <= 30 && obj is IBattleNpc && obj.IsTargetable && !obj.IsDead &&(Data.Target != null ? obj.EntityId != Data.Target.EntityId : true)).ToArray();
+            var nearbyCharacters = ObjectTable.Where(obj => obj != ObjectTable.LocalPlayer && obj.Position.Distance2D(ObjectTable.LocalPlayer.Position) <= 30 && obj is IPlayerCharacter && !obj.IsDead && (Data.Target != null ? obj.EntityId != Data.Target.EntityId : true)).ToArray();
+            Data.InRangeChars = nearbyCharacters.Where(obj => PartyList.Any(x => x.ObjectId == obj.EntityId)).ToArray();
         }
         else
         {
-            data[0].Dispose();
+            Data.Target = null;
+            Data.TargetPosition = Vector3.Zero;
+            Data.TargetHitbox = 0f;
+            Data.FocusTarget = null;
+            Data.FocusTargetPosition = Vector3.Zero;
+            Data.FocusTargetHitbox = 0f;
+            Data.PlayerPosition = Vector3.Zero;
+            Data.PlayerRotation = 0f;
+            Data.PlayerHitbox = 0f;
+            Data.PlayerAutoAttackRadius = 0f;
+            Data.MousePosition = Vector3.Zero;
+            Data.ActionID = 0;
+            Data.ActionName = string.Empty;
+            Data.ActionRadius = 0f;
+            Data.DamagingAction = false;
+            Data.CanTargetEnemy = false;
+            Data.CastType = 0;
+            Data.CastWidth = 0;
+            Data.ActionAngle = 0f;
         }
     }
 }
